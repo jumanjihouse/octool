@@ -1,0 +1,116 @@
+---
+name: SSH remote access server
+component_key: sshd
+
+description: |
+    SSH remote access servers enable employees to remotely access a
+    subset of the organization's systems. Remote access requires multi-factor
+    authentication but does not require VPN.
+
+attestations:
+    - summary: Terminate inactive ssh sessions after 15 minutes
+      satisfies:
+          - standard_key: S1
+            control_key: 9.5
+          - standard_key: NIST-800-53-r4
+            control_key: AC-12
+          - standard_key: NIST-800-53-r4
+            control_key: AC-2 (5)
+      status: complete
+      date_verified: 2020-05-01
+      narrative: |
+          The organization uses configuration management to configure `sshd` to
+          terminate idle (inactive) sessions after 900 seconds (15 minutes).
+
+          The specific settings for `sshd` include:
+
+          ```bash
+          # Request a response
+          # from the client through the encrypted channel
+          # if no data has been received from the client within this many seconds.
+          ClientAliveInterval 300
+
+          # Terminate the session
+          # if the client has not responded in this many ClientAliveIntervals.
+          ClientAliveCountMax 3
+          ```
+
+          The organization verifies the configuration through its central
+          management database (CMDB), which is updated via daily automation.
+          The automation runs a job on each host and collects the configuration
+          as it actually exists on the host to populate the CMDB. Job
+          automation triggers an alert if any host fails to respond to
+          the collection.
+
+          The following screenshot of the CMDB report shows that 100% of
+          systems have the idle timeout set to the specified configuration:
+
+          ![](assets/placeholder-screenshot.jpg)
+
+          References:
+
+          - [sshd config in organization puppet source control](https://git.example.com/something)
+          - [sshd_config(5)](https://linux.die.net/man/5/sshd_config)
+
+    - summary: Monitor and block unsuccessful logon attempts
+      satisfies:
+          - standard_key: NIST-800-53-r4
+            control_key: AC-7
+          - standard_key: NIST-800-53-r4
+            control_key: AC-17 (1)
+          - standard_key: NIST-800-53-r4
+            control_key: SI-4
+      status: complete
+      date_verified: 2020-05-01
+      narrative: |
+          The organization uses configuration management to install and configure
+          `sshguard` on bastion hosts to continuously aggregate system logs,
+          monitor unsuccessful logon attempts, and block repeat offenders. The
+          tool adds offenders to a _DROP_ rule on the host firewall. The DROP rule
+          prevents the offender from establishing any type of connection to the
+          bastion for the configured amount of time.
+
+          ![](assets/sshguard.png)
+
+          The following output shows a tiny portion of blocked offenders
+          for a single `ssh` bastion.
+
+          ```
+            Chain sshguard (1 references)
+             pkts bytes target     prot opt in     out     source               destination
+                0     0 DROP       all  --  *      *       37.139.4.138         0.0.0.0/0
+                4   240 DROP       all  --  *      *       211.213.198.139      0.0.0.0/0
+               10   600 DROP       all  --  *      *       49.235.229.211       0.0.0.0/0
+               24  1440 DROP       all  --  *      *       104.131.231.109      0.0.0.0/0
+               44  2640 DROP       all  --  *      *       139.199.18.200       0.0.0.0/0
+               35  2028 DROP       all  --  *      *       49.234.50.247        0.0.0.0/0
+               80  4800 DROP       all  --  *      *       125.124.147.117      0.0.0.0/0
+              136  8160 DROP       all  --  *      *       51.77.220.183        0.0.0.0/0
+              116  6960 DROP       all  --  *      *       103.218.242.102      0.0.0.0/0
+              149  8212 DROP       all  --  *      *       101.231.124.6        0.0.0.0/0
+               52  3056 DROP       all  --  *      *       175.24.67.124        0.0.0.0/0
+              152  9120 DROP       all  --  *      *       118.24.208.67        0.0.0.0/0
+               80  4800 DROP       all  --  *      *       170.239.47.251       0.0.0.0/0
+               52  3120 DROP       all  --  *      *       167.71.63.63         0.0.0.0/0
+              152  9072 DROP       all  --  *      *       154.8.141.3          0.0.0.0/0
+               80  4800 DROP       all  --  *      *       188.173.97.144       0.0.0.0/0
+              172 10320 DROP       all  --  *      *       46.8.158.66          0.0.0.0/0
+              173 10308 DROP       all  --  *      *       165.22.215.70        0.0.0.0/0
+              176 10560 DROP       all  --  *      *       117.33.253.49        0.0.0.0/0
+               15   836 DROP       all  --  *      *       209.182.237.202      0.0.0.0/0
+               44  2640 DROP       all  --  *      *       45.162.4.175         0.0.0.0/0
+              104  6240 DROP       all  --  *      *       77.65.17.2           0.0.0.0/0
+              104  6240 DROP       all  --  *      *       62.148.142.202       0.0.0.0/0
+               71  4260 DROP       all  --  *      *       200.14.32.101        0.0.0.0/0
+               92  5520 DROP       all  --  *      *       139.59.46.243        0.0.0.0/0
+               38  2280 DROP       all  --  *      *       150.109.62.167       0.0.0.0/0
+              148  8808 DROP       all  --  *      *       118.25.152.169       0.0.0.0/0
+              180 10800 DROP       all  --  *      *       192.144.136.109      0.0.0.0/0
+               96  5760 DROP       all  --  *      *       52.130.92.196        0.0.0.0/0
+               58  3416 DROP       all  --  *      *       49.234.27.90         0.0.0.0/0
+          ```
+
+          References:
+
+          - [sshguard config in organization source control](https://git.example.com/something)
+          - [sshguard](https://www.sshguard.net/)

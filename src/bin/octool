@@ -1,0 +1,93 @@
+#!/usr/bin/env ruby
+require 'gli'
+require 'octool'
+
+# Entrypoint and argument parser for the application.
+class App
+    extend GLI::App
+
+    program_desc 'Open Compliance Tool'
+    version OCTool::VERSION
+
+    subcommand_option_handling :normal
+    arguments :strict
+
+    desc 'Check sanity of configuration'
+    command :validate do |v|
+        v.desc 'validate data'
+        v.arg_name 'path/to/system/config.yaml'
+        v.command :data do |vd|
+            vd.action do |global_options, options, args|
+                config_file = find_config(args)
+                OCTool::Parser.new(config_file).validate_data
+            end
+        end
+
+        v.desc 'validate schemas'
+        v.command :schemas do |vs|
+            vs.action do |global_options, options, args|
+                OCTool::Parser.validate_schemas
+            end
+        end
+
+        v.default_command :data
+    end
+
+    desc 'generate System Security Plan'
+    arg_name 'path/to/system/config.yaml'
+    command :ssp do |s|
+        s.desc 'where to store outputs'
+        s.default_value Dir.tmpdir
+        s.long_desc 'Default output directory respects env vars TMPDIR, TMP, TEMP'
+        s.arg_name 'path/to/output/dir'
+        s.flag [:d, :dir]
+
+        s.action do |global_options, options, args|
+            export_dir = options[:dir]
+            FileUtils.mkdir_p export_dir unless File.directory?(export_dir)
+            config_file = find_config(args)
+            system = OCTool::Parser.new(config_file).load_system
+            Dir.chdir File.dirname(config_file) do
+                OCTool::SSP.new(system, export_dir)
+            end
+        end
+    end
+
+    pre do |global, command, options, args|
+        # Pre logic here
+        #
+        # Return true to proceed;
+        #        false to abort and not call the chosen command
+        #
+        # Use skips_pre before a command
+        # to skip this block on that command only.
+        true
+    end
+
+    post do |global, command, options, args|
+        # Post logic here
+        # Use skips_post before a command
+        # to skip this block on that command only.
+        puts 'OK'
+    end
+
+    on_error do |exception|
+        # Error logic here
+        # Return false to skip default error handling.
+        if ENV['DEBUG']
+            puts exception.backtrace
+            pp exception
+            false
+        else
+            true
+        end
+    end
+end
+
+def find_config(args)
+    path = args.first || OCTool::DEFAULT_CONFIG_FILENAME
+    path = File.join(path, OCTool::DEFAULT_CONFIG_FILENAME) if File.directory?(path)
+    path
+end
+
+exit App.run(ARGV)

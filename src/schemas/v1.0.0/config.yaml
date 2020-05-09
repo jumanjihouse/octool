@@ -1,0 +1,64 @@
+---
+type: map
+class: Config
+mapping:
+    schema_version:
+        desc: |
+            Must match one of the schema directories in the octool source.
+        required: true
+        type: str
+
+    name:
+        desc: Human-friendly to appear in the SSP.
+        required: true
+        type: str
+
+    overview:
+        desc: Human-friendly description to appear in the SSP.
+        required: true
+        type: str
+
+    maintainers:
+        desc: Who should somebody contact for questions about this SSP?
+        required: true
+        type: seq
+        sequence:
+            - type: str
+
+    metadata:
+        desc: Optional metadata.
+        required: false
+        type: map
+        class: Metadata
+        mapping:
+            abstract:
+                desc: Abstract appears in document metadata.
+                required: false
+                type: str
+            description:
+                desc: Description appears in document metadata.
+                required: false
+                type: str
+            '=':
+                desc: Arbitrary key:value pair of strings.
+                type: str
+
+    includes:
+        desc: Additional files to include from the system repo.
+        required: true
+        type: seq
+        sequence:
+            - type: map
+              class: Include
+              mapping:
+                  type:
+                      required: true
+                      type: str
+                      enum:
+                          - certification
+                          - component
+                          - standard
+                  path:
+                      desc: Path must be relative within the repo.
+                      required: true
+                      type: str

@@ -1,0 +1,52 @@
+== octool - Open Compliance Tool
+
+v0.0.1
+
+=== Global Options
+=== --help
+Show this message
+
+
+
+=== --version
+Display the program version
+
+
+
+=== Commands
+==== Command: <tt>help  command</tt>
+Shows a list of commands or help for one command
+
+Gets help for the application or its commands. Can also list the commands in a way helpful to creating a bash-style completion function
+===== Options
+===== -c
+List commands one per line, to assist with shell completion
+
+
+
+==== Command: <tt>ssp  path/to/system/config.yaml</tt>
+generate System Security Plan
+
+
+===== Options
+===== -d|--dir path/to/output/dir
+
+where to store outputs
+
+[Default Value] /tmp
+Default output directory respects env vars TMPDIR, TMP, TEMP
+
+==== Command: <tt>validate </tt>
+Check sanity of configuration
+
+
+===== Commands
+====== Command: <tt>data  path/to/system/config.yaml</tt>
+validate data
+
+
+====== Command: <tt>schemas </tt>
+validate schemas
+
+
+[Default Command] data

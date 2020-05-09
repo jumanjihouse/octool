@@ -2,6 +2,8 @@
 set -eEu
 set -o pipefail
 
+. sdlc/functions.sh
+
 if ! git remote show upstream &>/dev/null; then
     # This is necessary for gitlint.
     git remote add upstream https://github.com/jumanjihouse/octool.git
@@ -10,3 +12,6 @@ git fetch --all --prune
 
 pip3 install --user -r sdlc/requirements.txt
 pre-commit install-hooks
+
+cd src
+bundle update 2>/dev/null || bundle install --path="${HOME}/.bundle"

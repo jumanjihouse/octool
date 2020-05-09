@@ -1,0 +1,120 @@
+---
+title: "<%= @system.config.name -%>"
+subtitle: "System Security Plan"
+
+author:
+<% @system.config.maintainers.each do |maintainer| %>
+    - <%= maintainer -%>
+<% end %>
+
+absract: |
+    <%= @system.config.metadata.abstract rescue 'None' %>
+
+description: |
+    <%= @system.config.metadata.description rescue 'None' %>
+
+fontsize: 11pt
+mainfont: NotoSans
+#monofont: NotoSansMono-ExtraCondensedLight
+monofont: NotoSansMono-ExtraCondensed
+mainfontoptions:
+    - Numbers=Lowercase
+    - Numbers=Proportional
+    - UprightFont=*
+    - ItalicFont=*-Italic
+    - BoldFont=*-Bold
+    - BoldItalicFont=*-BoldItalic
+
+lof: false
+lot: false
+colorlinks: true
+linkcolor: blue
+urlcolor: blue
+
+documentclass: report
+classoption:
+    - onecolumn
+    - oneside
+    - portrait
+
+pagestyle: headings
+papersize: letter
+geometry:
+    - top=2cm
+    - left=2cm
+    - right=2cm
+    - bottom=2cm
+---
+
+# <%= @system.config.name %>
+
+## Overview
+
+<%= @system.config.overview %>
+
+## Standards
+
+This System Security Plan (SSP) addresses these standards:
+
+<% @system.standards.each do |s| -%>
+- <%= s.name %>
+<% end %>
+
+The full copy of each standard is included in the appendix.
+
+
+## Components
+
+<% @system.components.each do |c| %>
+### <%= c.name %>
+
+<%= c.description %>
+
+<% if c.attestations.empty? %>
+_The organization has not yet documented attestations for this component_.
+<% else %>
+The organization offers the following attestations for this component.
+<% end %>
+
+<% c.attestations.each do |a| %>
+####  <%= a.summary %>
+
+Status: <%= a.status %>
+
+Date verified: <%= a.date_verified if a.date_verified %>
+
+Satisfies:
+
+<% a.satisfies.each do |cid| -%>
+- <%= cid.standard_key %> control <%= cid.control_key %>
+<% end -%>
+
+<%= a.narrative %>
+
+<% end %>
+<% end %>
+
+
+# Appendix: Standards
+
+<% @system.standards.each do |s| %>
+## <%=s.name %>
+
+<% if s.families and !s.families.empty? %>
+### Families
+
+<% s.families.each do |family| %>
+- <%= family.family_key -%>: <%= family.name %>
+<% end %>
+
+<% end %>
+
+### Controls
+
+<% s.controls.each do |c| %>
+#### Control <%= c.control_key -%>: <%= c.name %>
+
+<%= c.description %>
+
+<% end %>
+<% end %>

@@ -1,3 +1,31 @@
 #!/usr/bin/env bash
 set -eEu
 set -o pipefail
+
+. sdlc/functions.sh
+
+indent() {
+    echo "       $*"
+}
+
+echo
+echo "[INFO] update table-of-contents"
+md_toc --in-place --skip-lines 1 commonmarker --header-levels 6 README.md
+
+export BUNDLE_GEMFILE=src/Gemfile
+for FILE in src/schemas/v1.0.0/*; do
+    SCHEMA_NAME="$(basename --suffix=".yaml" "${FILE}")"
+    NEW_FILE="src/lib/octool/generated/${SCHEMA_NAME}.rb"
+    echo "[INFO] Generate ruby code for ${SCHEMA_NAME}"
+    bundle exec kwalify -l -a genclass-ruby --module=OCTool --hashlike -tf "${FILE}" | sed 's/^  ## $//g' >"${NEW_FILE}"
+    indent "${NEW_FILE}"
+done
+
+cd src/
+export BUNDLE_GEMFILE=Gemfile
+
+# https://stackoverflow.com/a/42439671
+rm -fr pkg
+
+bundle exec octool _doc
+bundle exec rake package
