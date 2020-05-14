@@ -4,11 +4,19 @@ set -o pipefail
 
 VERSION="$(ruby -e 'load "src/lib/octool/version.rb"; print OCTool::VERSION')"
 echo "VERSION is ${VERSION}"
+
 output="$(gem search --remote -a octool)"
 if echo "${output}" | grep -q "${VERSION}"; then
     # Be informative, but don't fail.
     # This enables to merge changes to non-gem files, such as README.
     echo "[WARN] octool ${VERSION} has already been published."
-else
-    gem push "src/pkg/octool-${VERSION}.gem"
+    exit
 fi
+
+if [[ "${GEM_HOST_API_KEY:-unset}" == unset ]]; then
+    echo "[FAIL] GEM_HOST_API_KEY is unset"
+    exit 1
+fi
+
+gem --version
+gem push "src/pkg/octool-${VERSION}.gem"
