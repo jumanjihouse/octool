@@ -1,0 +1,25 @@
+---
+name: 'Simple Standard #1'
+standard_key: S1
+
+families:
+    - name: Observability
+      family_key: '2'
+
+    - name: Session management
+      family_key: '9'
+
+controls:
+    - control_key: '2.1'
+      family_key: '2'
+      name: Central audit facility
+      description: |
+          The information system sends security events from every
+          source system to a central facility for analysis.
+
+    - control_key: '9.5'
+      family_key: '9'
+      name: Idle timeout
+      description: |
+          The information system must disconnect sessions after 15 minutes
+          of inactivity.

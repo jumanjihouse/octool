@@ -1,0 +1,51 @@
+---
+schema_version: v1.0.0
+
+name: Remote Access Servers
+overview: |
+    The organization classifies remote access servers as
+    _jump hosts_ or _bastion hosts_. The organization recognizes the
+    following definitions when necessary to distinguish between
+    the two classes of remote access server.
+
+    Jump host
+      ~ Allows access between _internal_ domains with different trust levels.
+
+      ~ For example, the organization uses jump hosts to restrict
+        access between corporate desktop environments and server environments
+        within organization datacenters.
+
+    Bastion host
+      ~ Allows access into corporate environments from _external_ domains.
+
+      ~ For example, the organization uses bastion hosts to restrict
+        access from the public Internet.
+
+    Here is a high-level diagram of the remote access system.
+
+    ![](assets/placeholder.png)
+
+maintainers:
+    - Author Name, Title
+
+includes:
+    - path: s1.yaml
+      type: standard
+
+    - path: ../../standards/NIST-SP-800-53-rev4.yaml
+      type: standard
+
+    - path: low.yaml
+      type: certification
+
+    - path: high.yaml
+      type: certification
+
+    - path: citrix.yaml
+      type: component
+
+    - path: rdp.yaml
+      type: component
+
+    - path: sshd.yaml
+      type: component

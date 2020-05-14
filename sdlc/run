@@ -1,3 +1,7 @@
 #!/usr/bin/env bash
 set -eEu
 set -o pipefail
+
+. sdlc/functions.sh
+
+bundle exec src/bin/octool "$@"

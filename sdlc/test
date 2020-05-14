@@ -2,6 +2,27 @@
 set -eEu
 set -o pipefail
 
+. sdlc/functions.sh
+
+export BUNDLE_GEMFILE=src/Gemfile
+
+echo "[INFO] Validate schemas"
+bundle exec octool validate schemas
+
+for system in example-inputs/*; do
+    echo
+    echo "[INFO] Validate data for ${system}"
+    bundle exec octool validate data "${system}"
+
+    echo
+    if command -v pandoc &>/dev/null && command -v lualatex &>/dev/null; then
+        echo "[INFO] Build SSP for ${system}"
+        bundle exec octool ssp -d "/tmp/$(basename "${system}")" "${system}"
+    else
+        echo "[WARN] skip SSP because Pandoc and LuaTeX are missing"
+    fi
+done
+
 echo
 echo "[INFO] Run declarative checks"
 pre-commit run --all-files --hook-stage manual

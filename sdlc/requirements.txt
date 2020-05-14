@@ -1,1 +1,2 @@
+md-toc==7.0.1
 pre-commit==2.4.0

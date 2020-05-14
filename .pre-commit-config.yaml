@@ -24,12 +24,15 @@ repos:
           - id: check-mailmap
           - id: fasterer
           - id: forbid-binary
+            exclude: example-outputs/.*|.*/*assets/.*
           - id: git-check
+            exclude: src/lib/octool/generated/.*|example-outputs/.*
           - id: git-dirty
           - id: markdownlint
-          - id: reek
+            exclude: assets/.*
           - id: require-ascii
           - id: rubocop
+            exclude: src/lib/octool/(ssp.rb|generated/.*)
           - id: script-must-have-extension
           - id: script-must-not-have-extension
           - id: shellcheck

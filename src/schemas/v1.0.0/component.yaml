@@ -1,0 +1,60 @@
+---
+type: map
+class: Component
+mapping:
+    name:
+        desc: Human-friendly name to appear in the SSP.
+        type: str
+        required: true
+    component_key:
+        desc: Unique identifier for referential integrity.
+        type: str
+        required: true
+    description:
+        desc: A paragraph or two that describes the component.
+        type: str
+        required: true
+    attestations:
+        desc: List of attestations.
+        type: seq
+        sequence:
+            - type: map
+              class: Attestation
+              mapping:
+                  summary:
+                      desc: Arbitrary verbiage to appear in SSP as a TLDR.
+                      type: str
+                      required: true
+                  status:
+                      desc: To what extent is this attestation "done"?
+                      type: str
+                      required: true
+                      enum:
+                          - partial
+                          - complete
+                          - planned
+                          - none
+                  date_verified:
+                      desc: When was this last verified?
+                      type: date
+                      required: false
+                  satisfies:
+                      desc: List of control IDs covered by this attestation.
+                      type: seq
+                      required: false
+                      sequence:
+                          - type: map
+                            class: ControlID
+                            mapping:
+                                standard_key:
+                                    type: text
+                                    required: true
+                                control_key:
+                                    type: text
+                                    required: true
+                  narrative:
+                      desc: |
+                          Explain how attestation satisfies the indicated controls.
+                          The content should be in markdown format.
+                      type: str
+                      required: true

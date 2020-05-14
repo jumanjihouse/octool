@@ -1,0 +1,10 @@
+---
+schema_version: v1.0.0
+
+name: Empty example
+overview: Empty example for OCTool
+
+maintainers:
+    - Paul Morgan <jumanjiman@gmail.com>
+
+includes: []
