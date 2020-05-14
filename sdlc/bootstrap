@@ -6,6 +6,7 @@ if ! git remote show upstream &>/dev/null; then
     # This is necessary for gitlint.
     git remote add upstream https://github.com/jumanjihouse/octool.git
 fi
+git fetch --all --prune
 
 pip3 install --user -r sdlc/requirements.txt
 pre-commit install-hooks
