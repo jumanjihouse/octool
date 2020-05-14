@@ -63,9 +63,9 @@ module OCTool
 
         def schema_version
             @schema_version ||= Kwalify::Yaml.load_file(@config_file)['schema_version']
-        rescue StandardError
-            warn "Setting schema_version to #{LATEST_SCHEMA_VERSION}"
-            LATEST_SCHEMA_VERSION
+        rescue StandarError
+            STDERR.puts '[FAIL] Unable to read schema_version'
+            exit(1)
         end
 
         # Check that all data files are valid.

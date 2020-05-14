@@ -48,7 +48,7 @@ class App
             config_file = find_config(args)
             system = OCTool::Parser.new(config_file).load_system
             Dir.chdir File.dirname(config_file) do
-                OCTool::SSP.new(system, export_dir)
+                OCTool::SSP.new(system, export_dir).generate
             end
         end
     end

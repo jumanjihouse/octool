@@ -7,7 +7,6 @@ require 'tmpdir'
 # 3rd-party libs.
 require 'kwalify'
 require 'kwalify/util/hashlike'
-require 'paru/pandoc'
 
 # OCTool libs.
 require 'octool/constants'
