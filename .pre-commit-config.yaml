@@ -1,0 +1,78 @@
+---
+# This file configures https://pre-commit.com/
+# to use specific hooks and options.
+
+fail_fast: false
+
+repos:
+    - repo: https://github.com/pre-commit/pre-commit-hooks
+      rev: v2.5.0
+      hooks:
+          - id: check-added-large-files
+          - id: check-case-conflict
+          - id: check-executables-have-shebangs
+          - id: check-json
+          - id: check-merge-conflict
+          - id: check-symlinks
+          - id: detect-private-key
+          - id: requirements-txt-fixer
+          - id: trailing-whitespace
+
+    - repo: https://github.com/jumanjihouse/pre-commit-hooks
+      rev: 2.0.2
+      hooks:
+          - id: check-mailmap
+          - id: fasterer
+          - id: forbid-binary
+          - id: git-check
+          - id: git-dirty
+          - id: markdownlint
+          - id: reek
+          - id: require-ascii
+          - id: rubocop
+          - id: script-must-have-extension
+          - id: script-must-not-have-extension
+          - id: shellcheck
+          - id: shfmt
+
+    - repo: https://github.com/adrienverge/yamllint.git
+      rev: v1.23.0
+      hooks:
+          - id: yamllint
+            args: [--format, parsable, --strict]
+
+    - repo: https://github.com/jumanjihouse/pre-commit-hook-yamlfmt
+      rev: 0.0.10
+      hooks:
+          - id: yamlfmt
+
+    - repo: https://github.com/Lucas-C/pre-commit-hooks
+      rev: v1.1.7
+      hooks:
+          - id: forbid-crlf
+          - id: forbid-tabs
+            exclude_types:  # Types come from "identify-cli".
+                - go
+                - json
+                - makefile
+                - markdown
+                - python
+
+    - repo: https://github.com/pre-commit/mirrors-pylint
+      rev: v2.5.2
+      hooks:
+          - id: pylint
+            additional_dependencies:
+                - ruamel.yaml
+
+    - repo: https://github.com/jorisroovers/gitlint
+      rev: v0.13.1
+      hooks:
+          - id: gitlint
+            stages: [commit-msg]
+
+          - id: gitlint
+            entry: gitlint --commits upstream/master..
+            exclude: .*
+            always_run: true
+            stages: [manual]

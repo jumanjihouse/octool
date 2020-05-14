@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -eEu
+set -o pipefail
+
+echo
+echo "[INFO] Run declarative checks"
+pre-commit run --all-files --hook-stage manual
+
+# Show positive feedback to developer.
+echo
+echo "[PASS] Tests OK"

@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -eEu
+set -o pipefail
+
+pip3 install --user -r sdlc/requirements.txt
+pre-commit install-hooks

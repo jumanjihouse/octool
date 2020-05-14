@@ -1,0 +1,34 @@
+---
+# https://circleci.com/docs/docker
+version: 2
+jobs:
+    build:
+        docker:
+            # https://github.com/jumanjihouse/cci/pulls?q=is%3Apr+is%3Aclosed
+            - image: jumanjiman/cci:20200129.1700
+
+        working_directory: ~/workdir/
+
+        steps:
+            - setup_remote_docker
+
+            - checkout
+
+            - run:
+                  name: Bootstrap
+                  command: sdlc/bootstrap
+
+            - run:
+                  name: Build
+                  command: sdlc/build
+
+            - run:
+                  name: Test
+                  command: sdlc/test
+
+            - deploy:
+                  name: Deploy from master branch
+                  command: |
+                      if [[ ${CIRCLE_BRANCH} = master ]] && [[ -z ${CIRCLE_PR_NUMBER} ]]; then
+                        sdlc/publish
+                      fi
