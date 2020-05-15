@@ -101,7 +101,8 @@ It reads top-down and left-to-right.
 
 - **ConfigFile**: An OCTool configuration file.
 
-- **Component**: A list of attestations to satisfy one or more controls.
+- **Component**: A list of components within the system along with
+  attestations to satisfy one or more controls.
 
 - **Standard**: A list that defines one or more security controls.
 
