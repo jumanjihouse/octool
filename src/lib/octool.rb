@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'octool/version.rb'
 
 # Built-ins.

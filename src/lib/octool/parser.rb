@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module OCTool
     # Custom error to show validation errors.
     class ValidationError < StandardError

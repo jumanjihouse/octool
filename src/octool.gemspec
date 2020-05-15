@@ -1,9 +1,13 @@
+# frozen_string_literal: true
+
 # Require the local "version", not one that may be already installed.
 require File.join([File.dirname(__FILE__), 'lib', 'octool', 'version.rb'])
+require 'date'
 
 spec = Gem::Specification.new do |s| # rubocop:disable Lint/UselessAssignment
     s.name = 'octool'
     s.version = OCTool::VERSION
+    s.date = Date.today.strftime('%Y-%m-%d')
     s.author = 'Paul Morgan'
     s.email = 'jumanjiman@gmail.com'
     s.homepage = 'https://github.com/jumanjiman/octool'
@@ -16,6 +20,7 @@ spec = Gem::Specification.new do |s| # rubocop:disable Lint/UselessAssignment
     s.rdoc_options << '--title' << 'octool' << '--main' << 'README.rdoc' << '-ri'
     s.bindir = 'bin'
     s.executables << 'octool'
+    s.required_ruby_version = '>= 2.4'
     s.add_development_dependency('rake', '>= 13.0', '< 13.1')
     s.add_development_dependency('rdoc', '>= 6.2', '< 6.3')
     s.add_runtime_dependency('daru', '0.2.2')
