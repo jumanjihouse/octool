@@ -29,3 +29,8 @@ rm -fr pkg
 
 bundle exec octool _doc
 bundle exec rake package
+
+echo
+echo "[INFO] Build docker image"
+export OCTOOL_VERSION="${VERSION}"
+docker-compose build

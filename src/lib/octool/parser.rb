@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module OCTool
     # Custom error to show validation errors.
     class ValidationError < StandardError
@@ -56,9 +58,7 @@ module OCTool
         end
 
         def schema_dir
-            @schema_dir ||= begin
-                File.join(BASE_SCHEMA_DIR, schema_version).freeze
-            end
+            @schema_dir ||= File.join(BASE_SCHEMA_DIR, schema_version)
         end
 
         def schema_version

@@ -4,24 +4,16 @@ set -o pipefail
 
 . sdlc/functions.sh
 
-export BUNDLE_GEMFILE=src/Gemfile
-
 echo "[INFO] Validate schemas"
-bundle exec octool validate schemas
+BUNDLE_GEMFILE=src/Gemfile bundle exec octool validate schemas
 
-for system in example-inputs/*; do
-    echo
-    echo "[INFO] Validate data for ${system}"
-    bundle exec octool validate data "${system}"
+echo
+echo "[INFO] Validate data for example system"
+docker-compose run validate
 
-    echo
-    if command -v pandoc &>/dev/null && command -v lualatex &>/dev/null; then
-        echo "[INFO] Build SSP for ${system}"
-        bundle exec octool ssp -d "/tmp/$(basename "${system}")" "${system}"
-    else
-        echo "[WARN] skip SSP because Pandoc and LuaTeX are missing"
-    fi
-done
+echo
+echo "[INFO] Build SSP for example system"
+docker-compose run ssp
 
 echo
 echo "[INFO] Run declarative checks"

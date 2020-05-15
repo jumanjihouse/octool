@@ -15,6 +15,10 @@ module OCTool
         end
 
         def generate
+            if not File.writable?(@output_dir)
+                STDERR.puts "[FAIL] #{@output_dir} is not writable"
+                exit(1)
+            end
             render_template
             write
         end

@@ -7,3 +7,6 @@ readonly PYTHON_USER_BASE
 if ! grep "${PYTHON_USER_BASE}/bin" <(printenv PATH) &>/dev/null; then
     export PATH="${PATH}:${PYTHON_USER_BASE}/bin"
 fi
+
+VERSION="$(ruby -e 'load "src/lib/octool/version.rb"; print OCTool::VERSION')"
+echo "VERSION is ${VERSION}"

@@ -5,10 +5,15 @@
 - [Overview](#overview)
 - [How-to](#how-to)
   - [Get started with an example](#get-started-with-an-example)
-  - [Prereqs](#prereqs)
-  - [Install OCTool](#install-octool)
-  - [Generate an SSP from the example data](#generate-an-ssp-from-the-example-data)
-  - [Explore the schema for data inputs](#explore-the-schema-for-data-inputs)
+    - [The easy way](#the-easy-way)
+      - [Pull an already-built Docker image](#pull-an-already-built-docker-image)
+      - [Generate an SSP from the example data with Docker](#generate-an-ssp-from-the-example-data-with-docker)
+    - [Roll-your-own deployment](#roll-your-own-deployment)
+      - [Prereqs](#prereqs)
+      - [Install OCTool](#install-octool)
+      - [Generate an SSP from the example data with your own deployment](#generate-an-ssp-from-the-example-data-with-your-own-deployment)
+  - [Write your own data files](#write-your-own-data-files)
+  - [Build and test](#build-and-test)
 - [Concepts](#concepts)
   - [Entities](#entities)
   - [System vs component](#system-vs-component)
@@ -22,6 +27,14 @@
 
 OCTool aspires to be an open compliance tool and library.
 
+It uses Pandoc, TeXLive, LuaTeX, and an open data schema to
+produce compliance documents, such as System Security Plans (SSPs).
+
+This repo provides:
+
+- Ruby gem: https://rubygems.org/gems/octool
+- Docker image: https://hub.docker.com/repository/docker/jumanjiman/octool
+
 
 ## How-to
 
@@ -30,27 +43,47 @@ OCTool aspires to be an open compliance tool and library.
 This repo provides an example tree at `example-inputs/minimal`.
 
 
-### Prereqs
+#### The easy way
+
+##### Pull an already-built Docker image
+
+```bash
+docker pull jumanjiman/octool
+```
+
+##### Generate an SSP from the example data with Docker
+
+```bash
+docker run --rm -it -v /tmp:/data jumanjiman/octool ssp /example-inputs/minimal
+```
+
+The above command builds the SSP and
+saves it at `/tmp/ssp.pdf` on your Docker host.
+
+
+#### Roll-your-own deployment
+
+##### Prereqs
 
 Your host needs these packages:
 
 - Ruby
-- Pandoc
-- TexLive full distribution, including LuaTeX
+- Pandoc 2.9+
+- TexLive full distribution, including LuaTeX and XeLaTeX
 
 
-### Install OCTool
+##### Install OCTool
 
 ```bash
 gem install --user-install octool
 ```
 
-### Generate an SSP from the example data
+##### Generate an SSP from the example data with your own deployment
 
 1. Confirm the example data is valid
 
     ```bash
-    octool validate data example-inputs/minimal/config.yaml
+    octool validate example-inputs/minimal/config.yaml
     ```
 
 1. Build a PDF
@@ -63,7 +96,7 @@ gem install --user-install octool
    [example-outputs/minimal/ssp.pdf](example-outputs/minimal/ssp.pdf).
 
 
-### Explore the schema for data inputs
+### Write your own data files
 
 The schemas are at [src/schemas/](src/schemas).<br/>
 Things to know:
@@ -72,8 +105,42 @@ Things to know:
   You can use markdown in your data anywhere a string is required.<br/>
   See [example-inputs/minimal](example-inputs/minimal) for demo data.
 
-- You can run `octool validate data path/to/inputs` to confirm your data
-  structure.
+  :bulb: Pandoc has its own flavor of markdown.<br/>
+  See https://pandoc.org/MANUAL.html#pandocs-markdown<br/>
+  for differences from other flavors.
+
+  :bulb: When you reference paths to images within your markdown, the<br/>
+  path is relative to the directory in which `config.yaml` is stored.<br/>
+  See the example-inputs files for clarity.
+
+- You can run `octool validate path/to/inputs`<br/>
+  to confirm your data structure.
+
+- Do you want to run `octool` in a read-only container?<br/>
+  TeX needs to write to at least one directory.<br/>
+  Make at least one of these a volume in your container:
+
+  - `${HOME}` (inconvenient for unprivileged user with read-only homedir)
+  - `/usr/share/texmf-var` (writable only by root)
+
+  The Docker image in this repo works around the issue to<br/>
+  enable read-only containers.
+
+
+### Build and test
+
+This repo builds, tests, and publishes a Docker image that includes the
+full TeXLive distribution and OCTool. The test harness runs the container
+with a **read-only** root filesystem and **reduced privileges** to demonstrate
+good security practices for containerized applications.
+
+```bash
+# Setup your dev environment.
+sdlc/bootstrap
+
+# Build and test.
+sdlc/build && sdlc/test
+```
 
 
 ## Concepts
@@ -90,7 +157,8 @@ It reads top-down and left-to-right.
 
 - **ConfigFile**: An OCTool configuration file.
 
-- **Component**: A list of attestations to satisfy one or more controls.
+- **Component**: A list of components within the system along with
+  attestations to satisfy one or more controls.
 
 - **Standard**: A list that defines one or more security controls.
 
@@ -161,7 +229,7 @@ smaller systems, by a single component.
 - [X] Read input configuration in multiple formats
 - [X] Generate output documentation for governance and compliance
   - [ ] Excel
-  - [ ] Markdown
+  - [X] Markdown
   - [X] PDF
   - [ ] Word
 - [ ] Convert inputs to a well-defined data structure

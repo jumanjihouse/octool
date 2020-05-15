@@ -1,4 +1,6 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
+
 require 'gli'
 require 'octool'
 
@@ -37,14 +39,13 @@ class App
     arg_name 'path/to/system/config.yaml'
     command :ssp do |s|
         s.desc 'where to store outputs'
-        s.default_value Dir.tmpdir
+        s.default_value OCTool::DEFAULT_OUTPUT_DIR
         s.long_desc 'Default output directory respects env vars TMPDIR, TMP, TEMP'
         s.arg_name 'path/to/output/dir'
         s.flag [:d, :dir]
 
         s.action do |global_options, options, args|
             export_dir = options[:dir]
-            FileUtils.mkdir_p export_dir unless File.directory?(export_dir)
             config_file = find_config(args)
             system = OCTool::Parser.new(config_file).load_system
             Dir.chdir File.dirname(config_file) do
@@ -75,12 +76,13 @@ class App
         # Error logic here
         # Return false to skip default error handling.
         if ENV['DEBUG']
-            puts exception.backtrace
+            STDERR.puts exception.message
+            STDERR.puts exception.backtrace
             pp exception
             false
-        else
-            true
         end
+        STDERR.puts '[FAIL]'
+        true
     end
 end
 
