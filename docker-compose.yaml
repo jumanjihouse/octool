@@ -1,0 +1,33 @@
+---
+version: '2.4'
+
+services:
+    octool:
+        image: jumanjiman/octool
+        build:
+            context: .
+            args:
+                - OCTOOL_VERSION
+
+    validate: &runtime
+        image: jumanjiman/octool
+        read_only: true
+        cap_drop:
+            - all
+        pids_limit: 15
+        cpu_shares: 1023
+        mem_limit: 500M
+        shm_size: 32M
+        stdin_open: true
+        tty: true
+        environment:
+            - DEBUG=notblank
+        command:
+            - validate
+            - /example-inputs/minimal
+
+    ssp:
+        <<: *runtime
+        command:
+            - ssp
+            - /example-inputs/minimal

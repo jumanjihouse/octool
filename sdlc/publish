@@ -2,8 +2,24 @@
 set -eu
 set -o pipefail
 
-VERSION="$(ruby -e 'load "src/lib/octool/version.rb"; print OCTool::VERSION')"
-echo "VERSION is ${VERSION}"
+. sdlc/functions.sh
+
+DOCKER_HUB_USER="${DOCKER_HUB_USER:-unset}"
+DOCKER_HUB_TOKEN="${DOCKER_HUB_TOKEN:-unset}"
+if [[ "${DOCKER_HUB_USER}" = unset ]] || [[ "${DOCKER_HUB_TOKEN}" = unset ]]; then
+    echo "[FAIL] DOCKER_HUB_USER or DOCKER_HUB_TOKEN is unset"
+    exit 1
+fi
+
+docker login -u "${DOCKER_HUB_USER}" -p "${DOCKER_HUB_TOKEN}"
+# Push optimistic tag.
+docker-compose push texlive
+docker logout
+
+echo
+echo "[INFO] Trigger update on MicroBadger"
+run curl -X POST 'https://hooks.microbadger.com/images/jumanjiman/octool/pX_Ha2ULC4a-i6SYyAtPYiTUX5I='
+echo
 
 output="$(gem search --remote -a octool)"
 if echo "${output}" | grep -q "${VERSION}"; then
