@@ -35,7 +35,7 @@ This repo provides an example tree at `example-inputs/minimal`.
 Your host needs these packages:
 
 - Ruby
-- Pandoc
+- Pandoc 2.9+
 - TexLive full distribution, including LuaTeX
 
 
@@ -74,6 +74,13 @@ Things to know:
 
 - You can run `octool validate data path/to/inputs` to confirm your data
   structure.
+
+- Do you want to run `octool` in a read-only container?<br/>
+  TeX needs to write to at least one directory.<br/>
+  Make at least one of these a volume in your container:
+
+  - `${HOME}` or
+  - `/usr/share/texmf-var` on Alpine Linux and probably others
 
 
 ## Concepts
@@ -161,7 +168,7 @@ smaller systems, by a single component.
 - [X] Read input configuration in multiple formats
 - [X] Generate output documentation for governance and compliance
   - [ ] Excel
-  - [ ] Markdown
+  - [X] Markdown
   - [X] PDF
   - [ ] Word
 - [ ] Convert inputs to a well-defined data structure
