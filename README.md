@@ -72,6 +72,10 @@ Things to know:
   You can use markdown in your data anywhere a string is required.<br/>
   See [example-inputs/minimal](example-inputs/minimal) for demo data.
 
+  :eyes: Pandoc has its own flavor of markdown. See
+  [https://pandoc.org/MANUAL.html#pandocs-markdown](https://pandoc.org/MANUAL.html#pandocs-markdown)
+  for differences from other flavors.
+
 - You can run `octool validate data path/to/inputs` to confirm your data
   structure.
 
