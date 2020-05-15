@@ -18,7 +18,7 @@ docker logout
 
 echo
 echo "[INFO] Trigger update on MicroBadger"
-run curl -X POST 'https://hooks.microbadger.com/images/jumanjiman/octool/pX_Ha2ULC4a-i6SYyAtPYiTUX5I='
+curl -X POST 'https://hooks.microbadger.com/images/jumanjiman/octool/pX_Ha2ULC4a-i6SYyAtPYiTUX5I='
 echo
 
 output="$(gem search --remote -a octool)"
