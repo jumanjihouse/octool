@@ -45,7 +45,7 @@ attestations:
           The following screenshot of the CMDB report shows that 100% of
           systems have the idle timeout set to the specified configuration:
 
-          ![](assets/placeholder-screenshot.jpg)
+          ![Placeholder for CMDB report](assets/placeholder-screenshot.jpg)
 
           References:
 
@@ -70,7 +70,7 @@ attestations:
           prevents the offender from establishing any type of connection to the
           bastion for the configured amount of time.
 
-          ![](assets/sshguard.png)
+          ![SSHGuard blocks offender IPs](assets/sshguard.png)
 
           The following output shows a tiny portion of blocked offenders
           for a single `ssh` bastion.
