@@ -18,6 +18,12 @@ class App
         OCTool::DEFAULT_OUTPUT_DIR
     end
 
+    def self.find_config(args)
+        path = args.first || OCTool::DEFAULT_CONFIG_FILENAME
+        path = File.join(path, OCTool::DEFAULT_CONFIG_FILENAME) if File.directory?(path)
+        path
+    end
+
     program_desc 'Open Compliance Tool'
     version OCTool::VERSION
 
@@ -94,12 +100,6 @@ class App
         STDERR.puts '[FAIL]'
         true
     end
-end
-
-def find_config(args)
-    path = args.first || OCTool::DEFAULT_CONFIG_FILENAME
-    path = File.join(path, OCTool::DEFAULT_CONFIG_FILENAME) if File.directory?(path)
-    path
 end
 
 exit App.run(ARGV)
