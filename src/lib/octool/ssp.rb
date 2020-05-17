@@ -26,7 +26,8 @@ module OCTool
                 exit(1)
             end
             render_template
-            write
+            write 'pdf'
+            write 'docx'
         end
 
         def render_template
@@ -38,12 +39,12 @@ module OCTool
             puts 'done'
         end
 
-        def write
-            print "Building #{pdf_path} ... "
-            pandoc = Paru::Pandoc.new
+        def write(type = 'pdf')
+            out_path = File.join(@output_dir, "ssp.#{type}")
+            print "Building #{out_path} ... "
             converter = pandoc.configure do
                 from 'markdown'
-                to 'pdf'
+                to type
                 pdf_engine 'lualatex'
                 toc
                 toc_depth 3
@@ -51,16 +52,12 @@ module OCTool
                 highlight_style 'pygments'
             end
             output = converter << File.read(md_path)
-            File.new(pdf_path, 'wb').write(output)
+            File.new(out_path, 'wb').write(output)
             puts 'done'
         end
 
         def md_path
             @md_path ||= File.join(@output_dir, 'ssp.md')
-        end
-
-        def pdf_path
-            @pdf_path ||= File.join(@output_dir, 'ssp.pdf')
         end
     end
 end

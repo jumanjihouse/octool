@@ -16,8 +16,10 @@ echo "[INFO] Build SSP for example system"
 SSP_CID="ssp_container"
 docker rm -fv "${SSP_CID}" &>/dev/null || :
 docker-compose run --name "${SSP_CID}" ssp
-docker cp "${SSP_CID}":/tmp/ssp.pdf /tmp/
-echo "[INFO] copied doc to /tmp/ssp.pdf"
+for doc_type in md pdf docx; do
+    docker cp "${SSP_CID}:/tmp/ssp.${doc_type}" /tmp/
+    echo "[INFO] copied ${doc_type} to /tmp/ssp.${doc_type}"
+done
 
 echo
 echo "[INFO] Run declarative checks"
