@@ -13,7 +13,7 @@ echo "[INFO] update table-of-contents"
 md_toc --in-place --skip-lines 1 commonmarker --header-levels 6 README.md
 
 export BUNDLE_GEMFILE=src/Gemfile
-for FILE in src/schemas/v1.0.0/*; do
+for FILE in src/schemas/v1.0.1/*; do
     SCHEMA_NAME="$(basename --suffix=".yaml" "${FILE}")"
     NEW_FILE="src/lib/octool/generated/${SCHEMA_NAME}.rb"
     echo "[INFO] Generate ruby code for ${SCHEMA_NAME}"

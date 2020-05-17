@@ -1,5 +1,13 @@
 ---
+<% if @system.config.logo -%>
+title: |
+    ![](<%= @system.config.logo.path -%>){width=<%= @system.config.logo.width %>}
+
+    <%= @system.config.name %>
+<% else %>
 title: "<%= @system.config.name -%>"
+<% end %>
+
 subtitle: "System Security Plan"
 
 author:
