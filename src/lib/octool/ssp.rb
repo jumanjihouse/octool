@@ -6,9 +6,15 @@ module OCTool
         def initialize(system, output_dir)
             @system = system
             @output_dir = output_dir
-            # Load paru/pandoc late enough that help functions work
-            # and early enough to be confident that we catch the correct error.
-            require 'paru/pandoc'
+        end
+
+        def pandoc
+            @pandoc ||= begin
+                # Load paru/pandoc late enough that help functions work
+                # and early enough to be confident that we catch the correct error.
+                require 'paru/pandoc'
+                Paru::Pandoc.new
+            end
         rescue UncaughtThrowError => e
             STDERR.puts '[FAIL] octool requires pandoc to generate the SSP. Is pandoc installed?'
             exit(1)
@@ -20,7 +26,8 @@ module OCTool
                 exit(1)
             end
             render_template
-            write
+            write 'pdf'
+            write 'docx'
         end
 
         def render_template
@@ -32,12 +39,12 @@ module OCTool
             puts 'done'
         end
 
-        def write
-            print "Building #{pdf_path} ... "
-            pandoc = Paru::Pandoc.new
+        def write(type = 'pdf')
+            out_path = File.join(@output_dir, "ssp.#{type}")
+            print "Building #{out_path} ... "
             converter = pandoc.configure do
                 from 'markdown'
-                to 'pdf'
+                to type
                 pdf_engine 'lualatex'
                 toc
                 toc_depth 3
@@ -45,16 +52,12 @@ module OCTool
                 highlight_style 'pygments'
             end
             output = converter << File.read(md_path)
-            File.new(pdf_path, 'wb').write(output)
+            File.new(out_path, 'wb').write(output)
             puts 'done'
         end
 
         def md_path
             @md_path ||= File.join(@output_dir, 'ssp.md')
-        end
-
-        def pdf_path
-            @pdf_path ||= File.join(@output_dir, 'ssp.pdf')
         end
     end
 end

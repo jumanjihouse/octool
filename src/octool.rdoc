@@ -1,6 +1,6 @@
 == octool - Open Compliance Tool
 
-v0.0.3
+v0.0.4
 
 === Global Options
 === --help
@@ -33,7 +33,7 @@ generate System Security Plan
 
 where to store outputs
 
-[Default Value] /data
+[Default Value] /tmp
 Default output directory respects env vars TMPDIR, TMP, TEMP
 
 ==== Command: <tt>validate </tt>

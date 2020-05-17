@@ -8,6 +8,22 @@ require 'octool'
 class App
     extend GLI::App
 
+    def self.data_dir
+        [ENV['TMPDIR'], ENV['TMP'], ENV['TEMP'], '/tmp'].each do |dir|
+            next if dir.nil?
+
+            stat = File.stat(dir)
+            return dir if stat.directory? && stat.writable?
+        end
+        OCTool::DEFAULT_OUTPUT_DIR
+    end
+
+    def self.find_config(args)
+        path = args.first || OCTool::DEFAULT_CONFIG_FILENAME
+        path = File.join(path, OCTool::DEFAULT_CONFIG_FILENAME) if File.directory?(path)
+        path
+    end
+
     program_desc 'Open Compliance Tool'
     version OCTool::VERSION
 
@@ -39,7 +55,7 @@ class App
     arg_name 'path/to/system/config.yaml'
     command :ssp do |s|
         s.desc 'where to store outputs'
-        s.default_value OCTool::DEFAULT_OUTPUT_DIR
+        s.default_value data_dir
         s.long_desc 'Default output directory respects env vars TMPDIR, TMP, TEMP'
         s.arg_name 'path/to/output/dir'
         s.flag [:d, :dir]
@@ -84,12 +100,6 @@ class App
         STDERR.puts '[FAIL]'
         true
     end
-end
-
-def find_config(args)
-    path = args.first || OCTool::DEFAULT_CONFIG_FILENAME
-    path = File.join(path, OCTool::DEFAULT_CONFIG_FILENAME) if File.directory?(path)
-    path
 end
 
 exit App.run(ARGV)

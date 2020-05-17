@@ -25,10 +25,10 @@ mainfontoptions:
     - BoldFont=*-Bold
     - BoldItalicFont=*-BoldItalic
 
-lof: false
-lot: false
+lof: true
+lot: true
 colorlinks: true
-linkcolor: blue
+linkcolor: black  # internal links (e.g., lof and lot)
 urlcolor: blue
 
 documentclass: report
@@ -104,7 +104,9 @@ Satisfies:
 ### Families
 
 <% s.families.each do |family| %>
-- <%= family.family_key -%>: <%= family.name %>
+<%= family.family_key %>
+  ~ <%= family.name %>
+
 <% end %>
 
 <% end %>

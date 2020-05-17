@@ -4,7 +4,6 @@ require 'octool/version.rb'
 
 # Built-ins.
 require 'pp'
-require 'tmpdir'
 
 # 3rd-party libs.
 require 'kwalify'

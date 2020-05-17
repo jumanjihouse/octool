@@ -1,5 +1,24 @@
 FROM alpine:3.11.6
 
+ENTRYPOINT ["octool"]
+CMD ["--help"]
+
+# Create an "octool" user.
+RUN adduser -D -H -h /data -s /bin/bash octool && \
+    mkdir /data && \
+    chown octool /data
+
+# Writable directory for TeX.
+# The directory is configured by config option `TEXMFHOME` when TeX is built.
+# TeX tries to write to:
+# - TEXMFSYSVAR (/usr/share/texmf-var on Alpine, but it is owned by root)
+# - ${HOME}/.texlive*
+ENV HOME /data
+VOLUME /data
+
+# Pandoc writes to /tmp by default.
+VOLUME /tmp
+
 RUN apk add --no-cache \
     -X http://dl-cdn.alpinelinux.org/alpine/v3.11/main \
     -X http://dl-cdn.alpinelinux.org/alpine/v3.11/community \
@@ -20,25 +39,9 @@ RUN apk add --no-cache \
 
 # Pygments for syntax highlighting.
 COPY src/requirements.txt /src/
-RUN pip3 install -r /src/requirements.txt
+RUN pip3 install --no-cache -r /src/requirements.txt
 
-# Create an "octool" user.
-RUN adduser -D -H -h /data -s /bin/bash octool && \
-    mkdir /data && \
-    chown octool /data
-
-# Writable directory for TeX.
-# The directory is configured by config option `TEXMFHOME` when TeX is built.
-# TeX tries to write to:
-# - TEXMFSYSVAR (/usr/share/texmf-var on Alpine, but it is owned by root)
-# - ${HOME}/.texlive*
-ENV HOME /data
-VOLUME /data
-
-# Pandoc writes to /tmp by default.
-VOLUME /tmp
-
-COPY Dockerfile /
+COPY Dockerfile /src/
 COPY example-inputs /example-inputs
 COPY standards /standards
 
@@ -47,5 +50,3 @@ COPY src/pkg/octool-${OCTOOL_VERSION}.gem /octool/
 RUN gem install /octool/octool-${OCTOOL_VERSION}.gem
 
 USER octool
-ENTRYPOINT ["octool"]
-CMD ["--help"]
