@@ -104,7 +104,9 @@ Satisfies:
 ### Families
 
 <% s.families.each do |family| %>
-- <%= family.family_key -%>: <%= family.name %>
+<%= family.family_key %>
+  ~ <%= family.name %>
+
 <% end %>
 
 <% end %>
