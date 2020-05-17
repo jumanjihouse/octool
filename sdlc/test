@@ -13,7 +13,11 @@ docker-compose run validate
 
 echo
 echo "[INFO] Build SSP for example system"
-docker-compose run ssp
+SSP_CID="ssp_container"
+docker rm -fv "${SSP_CID}" &>/dev/null || :
+docker-compose run --name "${SSP_CID}" ssp
+docker cp "${SSP_CID}":/tmp/ssp.pdf /tmp/
+echo "[INFO] copied doc to /tmp/ssp.pdf"
 
 echo
 echo "[INFO] Run declarative checks"
