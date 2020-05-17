@@ -6,9 +6,15 @@ module OCTool
         def initialize(system, output_dir)
             @system = system
             @output_dir = output_dir
-            # Load paru/pandoc late enough that help functions work
-            # and early enough to be confident that we catch the correct error.
-            require 'paru/pandoc'
+        end
+
+        def pandoc
+            @pandoc ||= begin
+                # Load paru/pandoc late enough that help functions work
+                # and early enough to be confident that we catch the correct error.
+                require 'paru/pandoc'
+                Paru::Pandoc.new
+            end
         rescue UncaughtThrowError => e
             STDERR.puts '[FAIL] octool requires pandoc to generate the SSP. Is pandoc installed?'
             exit(1)
