@@ -32,7 +32,6 @@ repos:
             exclude: assets/.*
           - id: require-ascii
           - id: rubocop
-            exclude: src/lib/octool/ssp.rb
           - id: script-must-have-extension
           - id: script-must-not-have-extension
           - id: shellcheck
