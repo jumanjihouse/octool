@@ -29,4 +29,5 @@ spec = Gem::Specification.new do |s| # rubocop:disable Lint/UselessAssignment
     s.add_runtime_dependency('kwalify', '0.7.2')
     s.add_runtime_dependency('pandoc-ruby', '2.1.4')
     s.add_runtime_dependency('paru', '0.4.0.1')
+    s.add_runtime_dependency('recursive-open-struct', '1.1.1')
 end

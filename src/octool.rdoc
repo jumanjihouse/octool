@@ -25,7 +25,7 @@ List commands one per line, to assist with shell completion
 
 
 ==== Command: <tt>ssp  path/to/system/config.yaml</tt>
-generate System Security Plan
+validate data and generate System Security Plan
 
 
 ===== Options
