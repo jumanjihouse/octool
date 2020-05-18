@@ -51,7 +51,7 @@ class App
         v.default_command :data
     end
 
-    desc 'generate System Security Plan'
+    desc 'validate data and generate System Security Plan'
     arg_name 'path/to/system/config.yaml'
     command :ssp do |s|
         s.desc 'where to store outputs'

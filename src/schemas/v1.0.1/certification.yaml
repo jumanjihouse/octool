@@ -1,0 +1,27 @@
+---
+type: map
+class: Certification
+mapping:
+    certification_key:
+        desc: A short, unique identifier for this certification.
+        required: true
+        type: str
+        unique: true
+    name:
+        desc: A human-friendly name for the certification.
+        required: true
+        type: str
+    requires:
+        desc: List of control IDs required by the certification.
+        required: true
+        type: seq
+        sequence:
+            - type: map
+              class: ControlID
+              mapping:
+                  standard_key:
+                      required: true
+                      type: str
+                  control_key:
+                      required: true
+                      type: str

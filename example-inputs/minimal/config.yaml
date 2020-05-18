@@ -1,7 +1,11 @@
 ---
-schema_version: v1.0.0
+schema_version: v1.0.1
 
 name: Remote Access Servers
+logo:
+    path: assets/placeholder-logo.png
+    width: 2in
+
 overview: |
     The organization classifies remote access servers as
     _jump hosts_ or _bastion hosts_. The organization recognizes the

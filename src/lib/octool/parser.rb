@@ -42,10 +42,11 @@ module OCTool
         def validate_file(path, type)
             parser = kwalify_parser(type)
             data = parser.parse_file(path)
+            data['type'] = type
             errors = parser.errors
             raise ValidationError.new(path, errors) unless errors.empty?
 
-            data
+            RecursiveOpenStruct.new(data, recurse_over_arrays: true, preserve_original_keys: true)
         rescue SystemCallError, Kwalify::SyntaxError, ValidationError => e
             die e.message
         end
@@ -68,36 +69,19 @@ module OCTool
             exit(1)
         end
 
-        # Check that all data files are valid.
+        # Validate and load data in one pass.
         def validate_data
             base_dir = File.dirname(@config_file)
             config = validate_file(@config_file, 'config')
+            sys = System.new(config)
             config['includes'].each do |inc|
                 path = File.join(base_dir, inc['path'])
-                type = inc['type']
-                validate_file(path, type)
+                sys.data << validate_file(path, inc['type'])
             end
-            config
+            sys
         end
 
-        def load_system
-            base_dir = File.dirname(@config_file)
-            config = load_file(@config_file, 'config')
-            system = System.new(config)
-            config.includes.each do |inc|
-                path = File.join(base_dir, inc.path)
-                system.data << load_file(path, inc.type)
-            end
-            system
-        end
-
-        def load_file(path, type)
-            die "#{File.expand_path(path)} not readable" unless File.readable?(path)
-            klass = Object.const_get("OCTool::#{type.capitalize}")
-            ydoc = Kwalify::Yaml.load_file(path)
-            klass.new(ydoc)
-        rescue SystemCallError, Kwalify::SyntaxError => e
-            die e.message
-        end
+        alias load_system validate_data
+        alias load_file validate_file
     end
 end

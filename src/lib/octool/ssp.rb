@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'erb'
 
 module OCTool
@@ -15,13 +17,13 @@ module OCTool
                 require 'paru/pandoc'
                 Paru::Pandoc.new
             end
-        rescue UncaughtThrowError => e
+        rescue UncaughtThrowError
             STDERR.puts '[FAIL] octool requires pandoc to generate the SSP. Is pandoc installed?'
             exit(1)
         end
 
         def generate
-            if not File.writable?(@output_dir)
+            unless File.writable?(@output_dir)
                 STDERR.puts "[FAIL] #{@output_dir} is not writable"
                 exit(1)
             end
@@ -39,6 +41,7 @@ module OCTool
             puts 'done'
         end
 
+        # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
         def write(type = 'pdf')
             out_path = File.join(@output_dir, "ssp.#{type}")
             print "Building #{out_path} ... "
@@ -55,6 +58,7 @@ module OCTool
             File.new(out_path, 'wb').write(output)
             puts 'done'
         end
+        # rubocop:enable Metrics/AbcSize,Metrics/MethodLength
 
         def md_path
             @md_path ||= File.join(@output_dir, 'ssp.md')
