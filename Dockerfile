@@ -26,6 +26,7 @@ RUN apk add --no-cache \
     -X http://dl-cdn.alpinelinux.org/alpine/edge/community \
     -X http://dl-cdn.alpinelinux.org/alpine/edge/testing \
     bash \
+    git \
     'pandoc>=2.9' \
     py3-pip \
     python3-dev \
