@@ -4,4 +4,4 @@ set -o pipefail
 
 . sdlc/functions.sh
 
-bundle exec src/bin/octool "$@"
+BUNDLE_GEMFILE=src/Gemfile bundle exec src/bin/octool "$@"
