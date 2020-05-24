@@ -6,7 +6,7 @@ fail_fast: false
 
 repos:
     - repo: https://github.com/pre-commit/pre-commit-hooks
-      rev: v2.5.0
+      rev: v3.1.0
       hooks:
           - id: check-added-large-files
           - id: check-case-conflict
@@ -19,7 +19,7 @@ repos:
           - id: trailing-whitespace
 
     - repo: https://github.com/jumanjihouse/pre-commit-hooks
-      rev: 2.0.2
+      rev: 2.1.0
       hooks:
           - id: check-mailmap
           - id: fasterer

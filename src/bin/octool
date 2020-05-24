@@ -109,12 +109,12 @@ class App
         # Error logic here
         # Return false to skip default error handling.
         if ENV['DEBUG']
-            STDERR.puts exception.message
-            STDERR.puts exception.backtrace
+            warn exception.message
+            warn exception.backtrace
             pp exception
             false
         end
-        STDERR.puts '[FAIL]'
+        warn '[FAIL]'
         true
     end
 end

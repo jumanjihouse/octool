@@ -4,6 +4,7 @@ module OCTool
     # Custom error to show validation errors.
     class ValidationError < StandardError
         attr_reader :errors
+
         def initialize(path, errors)
             @path = path
             @errors = errors
@@ -64,7 +65,7 @@ module OCTool
         def schema_version
             @schema_version ||= Kwalify::Yaml.load_file(@config_file)['schema_version']
         rescue StandarError
-            STDERR.puts '[FAIL] Unable to read schema_version'
+            warn '[FAIL] Unable to read schema_version'
             exit(1)
         end
 

@@ -73,7 +73,7 @@ module OCTool
                 # Throw away nested hashes.
                 e.reject { |_, val| val.is_a?(Enumerable) }
             end
-            STDERR.puts "[INFO] write #{filename}"
+            warn "[INFO] write #{filename}"
             CSV.open(filename, 'wb') do |csv|
                 column_names = ary.first.keys
                 csv << column_names
