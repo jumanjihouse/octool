@@ -4,6 +4,7 @@ module OCTool
     # Custom error to show validation errors.
     class ValidationError < StandardError
         attr_reader :errors
+
         def initialize(path, errors)
             @path = path
             @errors = errors
@@ -40,10 +41,9 @@ module OCTool
         end
 
         def validate_file(path, type)
-            parser = kwalify_parser(type)
-            data = parser.parse_file(path)
-            data['type'] = type
-            errors = parser.errors
+            kwal = kwalifyer(type)
+            data = kwal.parse_file(path)
+            errors = kwal.errors
             raise ValidationError.new(path, errors) unless errors.empty?
 
             RecursiveOpenStruct.new(data, recurse_over_arrays: true, preserve_original_keys: true)
@@ -51,7 +51,7 @@ module OCTool
             die e.message
         end
 
-        def kwalify_parser(type)
+        def kwalifyer(type)
             schema_file = File.join(schema_dir, "#{type}.yaml")
             schema = Kwalify::Yaml.load_file(schema_file)
             validator = Kwalify::Validator.new(schema)
@@ -65,7 +65,7 @@ module OCTool
         def schema_version
             @schema_version ||= Kwalify::Yaml.load_file(@config_file)['schema_version']
         rescue StandarError
-            STDERR.puts '[FAIL] Unable to read schema_version'
+            warn '[FAIL] Unable to read schema_version'
             exit(1)
         end
 
@@ -76,9 +76,43 @@ module OCTool
             sys = System.new(config)
             config['includes'].each do |inc|
                 path = File.join(base_dir, inc['path'])
-                sys.data << validate_file(path, inc['type'])
+                sys.data << include_data(path, inc['type'])
             end
             sys
+        end
+
+        def include_data(path, type)
+            data = validate_file(path, type)
+            data['type'] = type
+            method("parsed_#{type}".to_sym).call(data)
+        end
+
+        def parsed_component(component)
+            component.attestations.map! do |a|
+                # Add a "component_key" field to each attestation.
+                a['component_key'] = component.component_key
+                a.satisfies.map! do |s|
+                    # Add "attestation_key" to each control satisfied by this attestation.
+                    s['attestation_key'] = a.summary
+                    # Add "component_key" to each control satisfied by this attestation.
+                    s['component_key'] = component.component_key
+                    s
+                end
+                a
+            end
+            component
+        end
+
+        def parsed_standard(standard)
+            # Add 'standard_key' to each control family and to each control.
+            standard.families.map! { |f| f['standard_key'] = standard.standard_key; f }
+            standard.controls.map! { |c| c['standard_key'] = standard.standard_key; c }
+            standard
+        end
+
+        def parsed_certification(cert)
+            cert.requires.map! { |r| r['certification_key'] = cert.certification_key; r }
+            cert
         end
 
         alias load_system validate_data

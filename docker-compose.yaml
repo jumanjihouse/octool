@@ -26,6 +26,12 @@ services:
             - validate
             - /example-inputs/minimal
 
+    csv:
+        <<: *runtime
+        command:
+            - csv
+            - /example-inputs/minimal
+
     ssp:
         <<: *runtime
         command:

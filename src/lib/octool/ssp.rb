@@ -18,13 +18,13 @@ module OCTool
                 Paru::Pandoc.new
             end
         rescue UncaughtThrowError
-            STDERR.puts '[FAIL] octool requires pandoc to generate the SSP. Is pandoc installed?'
+            warn '[FAIL] octool requires pandoc to generate the SSP. Is pandoc installed?'
             exit(1)
         end
 
         def generate
             unless File.writable?(@output_dir)
-                STDERR.puts "[FAIL] #{@output_dir} is not writable"
+                warn "[FAIL] #{@output_dir} is not writable"
                 exit(1)
             end
             render_template

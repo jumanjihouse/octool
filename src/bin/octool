@@ -21,7 +21,7 @@ class App
     def self.find_config(args)
         path = args.first || OCTool::DEFAULT_CONFIG_FILENAME
         path = File.join(path, OCTool::DEFAULT_CONFIG_FILENAME) if File.directory?(path)
-        path
+        File.expand_path(path)
     end
 
     program_desc 'Open Compliance Tool'
@@ -49,6 +49,23 @@ class App
         end
 
         v.default_command :data
+    end
+
+    desc 'export data to CSV'
+    arg_name 'path/to/system/config.yaml'
+    command :csv do |csv|
+        csv.desc 'where to store outputs'
+        csv.default_value data_dir
+        csv.long_desc 'Default output directory respects env vars TMPDIR, TMP, TEMP'
+        csv.arg_name 'path/to/output/dir'
+        csv.flag [:d, :dir]
+
+        csv.action do |global_options, options, args|
+            export_dir = options[:dir]
+            config_file = find_config(args)
+            system = OCTool::Parser.new(config_file).load_system
+            system.dump export_dir
+        end
     end
 
     desc 'validate data and generate System Security Plan'
@@ -92,12 +109,12 @@ class App
         # Error logic here
         # Return false to skip default error handling.
         if ENV['DEBUG']
-            STDERR.puts exception.message
-            STDERR.puts exception.backtrace
+            warn exception.message
+            warn exception.backtrace
             pp exception
             false
         end
-        STDERR.puts '[FAIL]'
+        warn '[FAIL]'
         true
     end
 end

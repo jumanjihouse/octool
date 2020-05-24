@@ -231,10 +231,10 @@ smaller systems, by a single component.
   - [ ] Excel
   - [X] Markdown
   - [X] PDF
-  - [ ] Word
-- [ ] Convert inputs to a well-defined data structure
+  - [X] Word
+- [X] Convert inputs to a well-defined data structure
   - Intermediate output
-    - [ ] CSV
+    - [X] CSV
     - [ ] Excel
     - [ ] SQLite
   - Facilitate gap analysis
