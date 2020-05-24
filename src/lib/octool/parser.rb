@@ -40,10 +40,10 @@ module OCTool
         end
 
         def validate_file(path, type)
-            parser = kwalify_parser(type)
-            data = parser.parse_file(path)
+            kwal = kwalifyer(type)
+            data = kwal.parse_file(path)
             data['type'] = type
-            errors = parser.errors
+            errors = kwal.errors
             raise ValidationError.new(path, errors) unless errors.empty?
 
             RecursiveOpenStruct.new(data, recurse_over_arrays: true, preserve_original_keys: true)
@@ -51,7 +51,7 @@ module OCTool
             die e.message
         end
 
-        def kwalify_parser(type)
+        def kwalifyer(type)
             schema_file = File.join(schema_dir, "#{type}.yaml")
             schema = Kwalify::Yaml.load_file(schema_file)
             validator = Kwalify::Validator.new(schema)
