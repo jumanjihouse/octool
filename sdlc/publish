@@ -12,6 +12,9 @@ if [[ "${DOCKER_HUB_USER}" = unset ]] || [[ "${DOCKER_HUB_TOKEN}" = unset ]]; th
 fi
 
 docker login -u "${DOCKER_HUB_USER}" -p "${DOCKER_HUB_TOKEN}"
+# Push pessimistic tag.
+docker tag jumanjiman/octool "jumanjiman/octool:${VERSION}"
+docker push "jumanjiman/octool:${VERSION}"
 # Push optimistic tag.
 docker-compose push octool
 docker logout
