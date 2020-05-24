@@ -42,7 +42,6 @@ module OCTool
         def validate_file(path, type)
             kwal = kwalifyer(type)
             data = kwal.parse_file(path)
-            data['type'] = type
             errors = kwal.errors
             raise ValidationError.new(path, errors) unless errors.empty?
 
@@ -76,9 +75,43 @@ module OCTool
             sys = System.new(config)
             config['includes'].each do |inc|
                 path = File.join(base_dir, inc['path'])
-                sys.data << validate_file(path, inc['type'])
+                sys.data << include_data(path, inc['type'])
             end
             sys
+        end
+
+        def include_data(path, type)
+            data = validate_file(path, type)
+            data['type'] = type
+            method("parsed_#{type}".to_sym).call(data)
+        end
+
+        def parsed_component(component)
+            component.attestations.map! do |a|
+                # Add a "component_key" field to each attestation.
+                a['component_key'] = component.component_key
+                a.satisfies.map! do |s|
+                    # Add "attestation_key" to each control satisfied by this attestation.
+                    s['attestation_key'] = a.summary
+                    # Add "component_key" to each control satisfied by this attestation.
+                    s['component_key'] = component.component_key
+                    s
+                end
+                a
+            end
+            component
+        end
+
+        def parsed_standard(standard)
+            # Add 'standard_key' to each control family and to each control.
+            standard.families.map! { |f| f['standard_key'] = standard.standard_key; f }
+            standard.controls.map! { |c| c['standard_key'] = standard.standard_key; c }
+            standard
+        end
+
+        def parsed_certification(cert)
+            cert.requires.map! { |r| r['certification_key'] = cert.certification_key; r }
+            cert
         end
 
         alias load_system validate_data
