@@ -60,8 +60,8 @@ module OCTool
         end
 
         def dump(writable_dir)
-            TABLE_NAMES.each do |type|
-                write_csv method(type.to_sym).call, File.join(writable_dir, "#{type}.csv")
+            TABLE_NAMES.each do |table|
+                write_csv method(table.to_sym).call, File.join(writable_dir, "#{table}.csv")
             end
         end
 

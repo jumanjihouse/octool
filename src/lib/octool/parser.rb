@@ -41,9 +41,9 @@ module OCTool
         end
 
         def validate_file(path, type)
-            kwal = kwalifyer(type)
-            data = kwal.parse_file(path)
-            errors = kwal.errors
+            kwalify = kwalifyer(type)
+            data = kwalify.parse_file(path)
+            errors = kwalify.errors
             raise ValidationError.new(path, errors) unless errors.empty?
 
             RecursiveOpenStruct.new(data, recurse_over_arrays: true, preserve_original_keys: true)
