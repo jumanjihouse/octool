@@ -21,7 +21,7 @@ class App
     def self.find_config(args)
         path = args.first || OCTool::DEFAULT_CONFIG_FILENAME
         path = File.join(path, OCTool::DEFAULT_CONFIG_FILENAME) if File.directory?(path)
-        path
+        File.expand_path(path)
     end
 
     program_desc 'Open Compliance Tool'
