@@ -46,7 +46,7 @@ module OCTool
             errors = kwalify.errors
             raise ValidationError.new(path, errors) unless errors.empty?
 
-            RecursiveOpenStruct.new(data, recurse_over_arrays: true, preserve_original_keys: true)
+            data
         rescue SystemCallError, Kwalify::SyntaxError, ValidationError => e
             die e.message
         end
@@ -88,14 +88,14 @@ module OCTool
         end
 
         def parsed_component(component)
-            component.attestations.map! do |a|
+            component['attestations'].map! do |a|
                 # Add a "component_key" field to each attestation.
-                a['component_key'] = component.component_key
-                a.satisfies.map! do |s|
+                a['component_key'] = component['component_key']
+                a['satisfies'].map! do |s|
                     # Add "attestation_key" to each control satisfied by this attestation.
-                    s['attestation_key'] = a.summary
+                    s['attestation_key'] = a['summary']
                     # Add "component_key" to each control satisfied by this attestation.
-                    s['component_key'] = component.component_key
+                    s['component_key'] = component['component_key']
                     s
                 end
                 a
@@ -105,13 +105,13 @@ module OCTool
 
         def parsed_standard(standard)
             # Add 'standard_key' to each control family and to each control.
-            standard.families.map! { |f| f['standard_key'] = standard.standard_key; f }
-            standard.controls.map! { |c| c['standard_key'] = standard.standard_key; c }
+            standard['families'].map! { |f| f['standard_key'] = standard['standard_key']; f }
+            standard['controls'].map! { |c| c['standard_key'] = standard['standard_key']; c }
             standard
         end
 
         def parsed_certification(cert)
-            cert.requires.map! { |r| r['certification_key'] = cert.certification_key; r }
+            cert['requires'].map! { |r| r['certification_key'] = cert['certification_key']; r }
             cert
         end
 
