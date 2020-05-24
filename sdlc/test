@@ -12,6 +12,10 @@ echo "[INFO] Validate data for example system"
 docker-compose run validate
 
 echo
+echo "[INFO] Export data to CSV for example system"
+docker-compose run csv
+
+echo
 echo "[INFO] Build SSP for example system"
 SSP_CID="ssp_container"
 docker rm -fv "${SSP_CID}" &>/dev/null || :

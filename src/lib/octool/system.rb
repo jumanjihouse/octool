@@ -6,6 +6,17 @@ module OCTool
         attr_accessor :config
         attr_accessor :data
 
+        TABLE_NAMES = [
+            'components',
+            'satisfies',
+            'attestations',
+            'standards',
+            'controls',
+            'families',
+            'certifications',
+            'requires',
+        ].freeze
+
         def initialize(config)
             @config = config
             @data = []
@@ -46,6 +57,28 @@ module OCTool
         # List of required controls for all certifications.
         def requires
             @requires ||= certifications.map(&:requires).flatten
+        end
+
+        def dump(writable_dir)
+            TABLE_NAMES.each do |type|
+                write_csv method(type.to_sym).call, File.join(writable_dir, "#{type}.csv")
+            end
+        end
+
+        # Convert array of hashes into a CSV.
+        def write_csv(ary, filename)
+            ary = ary.map do |e|
+                # Convert each element from RecursiveOStruct to a Hash.
+                e = e.is_a?(Hash) ? e : e.to_h
+                # Throw away nested hashes.
+                e.reject { |_, val| val.is_a?(Enumerable) }
+            end
+            STDERR.puts "[INFO] write #{filename}"
+            CSV.open(filename, 'wb') do |csv|
+                column_names = ary.first.keys
+                csv << column_names
+                ary.each { |hash| csv << hash.values_at(*column_names) }
+            end
         end
     end
 end

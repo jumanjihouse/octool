@@ -14,6 +14,18 @@ Display the program version
 
 
 === Commands
+==== Command: <tt>csv  path/to/system/config.yaml</tt>
+export data to CSV
+
+
+===== Options
+===== -d|--dir path/to/output/dir
+
+where to store outputs
+
+[Default Value] /tmp
+Default output directory respects env vars TMPDIR, TMP, TEMP
+
 ==== Command: <tt>help  command</tt>
 Shows a list of commands or help for one command
 

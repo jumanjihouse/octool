@@ -51,6 +51,23 @@ class App
         v.default_command :data
     end
 
+    desc 'export data to CSV'
+    arg_name 'path/to/system/config.yaml'
+    command :csv do |csv|
+        csv.desc 'where to store outputs'
+        csv.default_value data_dir
+        csv.long_desc 'Default output directory respects env vars TMPDIR, TMP, TEMP'
+        csv.arg_name 'path/to/output/dir'
+        csv.flag [:d, :dir]
+
+        csv.action do |global_options, options, args|
+            export_dir = options[:dir]
+            config_file = find_config(args)
+            system = OCTool::Parser.new(config_file).load_system
+            system.dump export_dir
+        end
+    end
+
     desc 'validate data and generate System Security Plan'
     arg_name 'path/to/system/config.yaml'
     command :ssp do |s|
