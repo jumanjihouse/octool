@@ -12,15 +12,15 @@ module OCTool
         end
 
         def certifications
-            @certifications ||= @data.select { |e| e.type == 'certification' }
+            @certifications ||= data.select { |e| e.type == 'certification' }
         end
 
         def components
-            @components ||= @data.select { |e| e.type == 'component' }
+            @components ||= data.select { |e| e.type == 'component' }
         end
 
         def standards
-            @standards ||= @data.select { |e| e.type == 'standard' }
+            @standards ||= data.select { |e| e.type == 'standard' }
         end
 
         # List of all attestations claimed by components in the system.
