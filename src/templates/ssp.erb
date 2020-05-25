@@ -126,11 +126,15 @@ Satisfies:
 <% if s['families'] and !s['families'].empty? %>
 ### Families
 
-<% s['families'].each do |family| %>
-<%= family['family_key'] %>
-  ~ <%= family['name'] %>
+<%=s['name']-%> categorizes controls into logical groups called families.
 
-<% end %>
+| Family abbreviation        | Family name          |
+| -------------------------- | -------------------- |
+<% s['families'].each do |family| -%>
+| <%=family['family_key']-%> | <%=family['name']-%> |
+<% end -%>
+
+  : Control families for <%=s['name']%>
 
 <% end %>
 
