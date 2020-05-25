@@ -104,18 +104,24 @@ _The organization has not yet documented attestations for this component_.
 The organization offers the following attestations for this component.
 <% end %>
 
-<% c['attestations'].each do |a| %>
+<% c['attestations'].compact.each do |a| %>
 ####  <%= a['summary'] %>
 
-Status: <%= a['status'] %>
-
-Date verified: <%= a['date_verified'] if a['date_verified'] %>
-
-Satisfies:
-
-<% a['satisfies'].each do |cid| -%>
-- <%= cid['standard_key'] %> control <%= cid['control_key'] %>
-<% end -%>
++----------+---------------+--------------------------------------------------------------+
+| Status   | Date verified | Satisfies                                                    |
++==========+===============+==============================================================+
+<%
+s = a['satisfies'][0]
+verbiage = sprintf('%-58s', [s['standard_key'], 'control', s['control_key']].join(' '))
+-%>
+| <%=sprintf('%-8s', a['status'])-%> | <%=sprintf('%-13s', a['date_verified'])-%> | - <%=verbiage-%> |
+<%
+a['satisfies'][1..].each do |s|
+    verbiage = sprintf('%-58s', [s['standard_key'], 'control', s['control_key']].join(' '))
+-%>
+|          |               | - <%=verbiage-%> |
+<%  end -%>
++----------+---------------+--------------------------------------------------------------+
 
 <%= a['narrative'] %>
 
