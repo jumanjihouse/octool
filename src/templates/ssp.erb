@@ -52,6 +52,21 @@ geometry:
     - left=2cm
     - right=2cm
     - bottom=2cm
+
+header-includes:
+    - |
+        ```{=latex}
+        % https://github.com/jgm/pandoc/wiki/Pandoc-Tricks#definition-list-terms-on-their-own-line-in-latex
+        % "Clone" the original \item command
+        \let\originalitem\item
+
+        % Redefine the \item command using the "clone"
+        \makeatletter
+        \renewcommand{\item}[1][\@nil]{%
+            \def\tmp{#1}%
+            \ifx\tmp\@nnil\originalitem\else\originalitem[#1]\hfill\par\fi}
+        \makeatother
+        ```
 ---
 
 # <%= @system.config['name'] %>
