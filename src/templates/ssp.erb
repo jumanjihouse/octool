@@ -56,6 +56,11 @@ geometry:
 header-includes:
     - |
         ```{=latex}
+        % https://github.com/jgm/pandoc/wiki/Pandoc-Tricks#left-aligning-tables-in-latex
+        \usepackage[margins=raggedright]{floatrow}
+        ```
+    - |
+        ```{=latex}
         % https://github.com/jgm/pandoc/wiki/Pandoc-Tricks#definition-list-terms-on-their-own-line-in-latex
         % "Clone" the original \item command
         \let\originalitem\item
