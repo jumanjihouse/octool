@@ -92,21 +92,53 @@ header-includes:
         ```
 ---
 
-# <%= @system.config['name'] %>
+# Introduction
 
-## Overview
+## About this document
 
-<%= @system.config['overview'] %>
+A System Security Plan (SSP) is a document to describe security controls in use
+on an information system and their implementation. An SSP provides:
+
+- Narrative of security control implementation
+- Description of components and services
+- System data flows and authorization boundaries
+
 
 ## Standards
 
-This System Security Plan (SSP) addresses these standards:
+This SSP draws from these standards:
 
 <% @system.standards.each do |s| -%>
 - <%= s['name'] %>
 <% end %>
 
 The full copy of each standard is included in the appendix.
+
+
+## Certifications
+
+A certification is a logical grouping of controls that are of interest to
+a given subject. A particular certification does not necessarily target all
+controls from a standard, nor does a particular certification need to draw
+from a single standard.
+
+This SSP addresses these certifications:
+
+<% @system.certifications.each do |c| -%>
+- <%=c['name']%>
+
+<% c['requires'].each do |r| -%>
+    - <%=r['standard_key']-%> control <%=r['control_key']%>
+<% end -%>
+
+<% end %>
+
+
+# <%= @system.config['name'] %>
+
+## Overview
+
+<%= @system.config['overview'] %>
 
 
 ## Components
