@@ -24,7 +24,7 @@ attestations:
 
           The specific settings for `sshd` include:
 
-          ```bash
+          ``` {.bash .numberLines caption='sshd timeout config'}
           # Request a response
           # from the client through the encrypted channel
           # if no data has been received from the client within this many seconds.
