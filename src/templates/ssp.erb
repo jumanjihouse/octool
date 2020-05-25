@@ -72,6 +72,24 @@ header-includes:
             \ifx\tmp\@nnil\originalitem\else\originalitem[#1]\hfill\par\fi}
         \makeatother
         ```
+    - |
+        ```{=latex}
+        % The are at least two ways to configure how LaTeX floats figures.
+        %
+        % 1. One approach is described in section 17.2 of
+        %    http://tug.ctan.org/tex-archive/info/epslatex/english/epslatex.pdf
+        %    However, the approach described there requires to teach people
+        %    how to write LaTeX cross-references in markdown.
+        %
+        % 2. Force figures, listings, etc., to float "[H]ere".
+        %    This is a LaTeX anti-pattern because it causes large gaps of whitespace on some pages.
+        %    This approach avoids having to teach people to create LaTeX cross-references.
+        %    https://tex.stackexchange.com/a/101726
+        %
+        % Use option 2.
+        \usepackage{float}
+        \floatplacement{figure}{H}
+        ```
 ---
 
 # <%= @system.config['name'] %>
