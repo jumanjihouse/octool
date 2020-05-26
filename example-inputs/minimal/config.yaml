@@ -1,13 +1,18 @@
 ---
-schema_version: v1.0.1
+schema_version: v1.0.2
 
 name: Remote Access Servers
 logo:
     path: assets/placeholder-logo.png
     width: 2in
 
+acronyms:
+    org:
+        shortform: MyEO
+        longform: My Example Organization, Inc.
+
 overview: |
-    The organization classifies remote access servers as
+    [!org] classifies remote access servers as
     _jump hosts_ or _bastion hosts_. The organization recognizes the
     following definitions when necessary to distinguish between
     the two classes of remote access server.
@@ -15,14 +20,14 @@ overview: |
     Jump host
       ~ Allows access between _internal_ domains with different trust levels.
 
-      ~ For example, the organization uses jump hosts to restrict
+      ~ For example, [!org] uses jump hosts to restrict
         access between corporate desktop environments and server environments
         within organization datacenters.
 
     Bastion host
       ~ Allows access into corporate environments from _external_ domains.
 
-      ~ For example, the organization uses bastion hosts to restrict
+      ~ For example, [!org] uses bastion hosts to restrict
         access from the public Internet.
 
     Here is a high-level diagram of the remote access system.

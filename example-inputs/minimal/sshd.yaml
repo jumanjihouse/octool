@@ -4,7 +4,7 @@ component_key: sshd
 
 description: |
     SSH remote access servers enable employees to remotely access a
-    subset of the organization's systems. Remote access requires multi-factor
+    subset of [!org] systems. Remote access requires multi-factor
     authentication but does not require VPN.
 
 attestations:
@@ -19,7 +19,7 @@ attestations:
       status: complete
       date_verified: 2020-05-01
       narrative: |
-          The organization uses configuration management to configure `sshd` to
+          [!org] uses configuration management to configure `sshd` to
           terminate idle (inactive) sessions after 900 seconds (15 minutes).
 
           The specific settings for `sshd` include:
@@ -35,7 +35,7 @@ attestations:
           ClientAliveCountMax 3
           ```
 
-          The organization verifies the configuration through its central
+          [!org] verifies the configuration through its central
           management database (CMDB), which is updated via daily automation.
           The automation runs a job on each host and collects the configuration
           as it actually exists on the host to populate the CMDB. Job
@@ -63,7 +63,7 @@ attestations:
       status: complete
       date_verified: 2020-05-01
       narrative: |
-          The organization uses configuration management to install and configure
+          [!org] uses configuration management to install and configure
           `sshguard` on bastion hosts to continuously aggregate system logs,
           monitor unsuccessful logon attempts, and block repeat offenders. The
           tool adds offenders to a _DROP_ rule on the host firewall. The DROP rule

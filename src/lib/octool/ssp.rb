@@ -28,6 +28,7 @@ module OCTool
                 exit(1)
             end
             render_template
+            write_acronyms
             write 'pdf'
             write 'docx'
         end
@@ -39,6 +40,14 @@ module OCTool
             output = ERB.new(template, nil, '-').result(binding)
             File.open(md_path, 'w') { |f| f.puts output }
             puts 'done'
+        end
+
+        def write_acronyms
+            return unless @system.acronyms
+
+            out_path = File.join(@output_dir, 'acronyms.json')
+            File.open(out_path, 'w') { |f| f.write JSON.pretty_generate(@system.acronyms) }
+            ENV['PANDOC_ACRONYMS_ACRONYMS'] = out_path
         end
 
         # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
@@ -53,6 +62,7 @@ module OCTool
                 toc_depth 3
                 number_sections
                 highlight_style 'pygments'
+                filter 'pandoc-acronyms' if ENV['PANDOC_ACRONYMS_ACRONYMS']
                 # https://en.wikibooks.org/wiki/LaTeX/Source_Code_Listings#Encoding_issue
                 # Uncomment the following line after the "listings" package is compatible with utf8
                 # listings

@@ -4,7 +4,7 @@ component_key: rdp
 
 description: |
     Windows remote access servers enable employees to remotely access a
-    subset of the organization's systems. Remote access is only available
+    subset of [!org] systems. Remote access is only available
     via VPN with multi-factor authentication.
 
 attestations: []

@@ -13,6 +13,7 @@
       - [Install OCTool](#install-octool)
       - [Generate an SSP from the example data with your own deployment](#generate-an-ssp-from-the-example-data-with-your-own-deployment)
   - [Write your own data files](#write-your-own-data-files)
+  - [Pandoc filters](#pandoc-filters)
   - [Build and test](#build-and-test)
 - [Concepts](#concepts)
   - [Entities](#entities)
@@ -67,8 +68,9 @@ saves it at `/tmp/ssp.pdf` on your Docker host.
 
 Your host needs these packages:
 
-- Ruby
+- Ruby 2.4+
 - Pandoc 2.9+
+- Python 3.6+
 - TexLive full distribution, including LuaTeX and XeLaTeX
 
 
@@ -125,6 +127,13 @@ Things to know:
 
   The Docker image in this repo works around the issue to<br/>
   enable read-only containers.
+
+
+### Pandoc filters
+
+OCTool builds in support for these Pandoc filters via the schema:
+
+- https://gitlab.com/mirkoboehm/pandoc-acronyms
 
 
 ### Build and test

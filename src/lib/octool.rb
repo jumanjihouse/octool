@@ -4,6 +4,7 @@ require 'octool/version.rb'
 
 # Built-ins.
 require 'csv'
+require 'json'
 require 'pp'
 
 # 3rd-party libs.
