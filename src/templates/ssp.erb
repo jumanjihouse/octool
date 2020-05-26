@@ -52,23 +52,93 @@ geometry:
     - left=2cm
     - right=2cm
     - bottom=2cm
+
+header-includes:
+    - |
+        ```{=latex}
+        % https://github.com/jgm/pandoc/wiki/Pandoc-Tricks#left-aligning-tables-in-latex
+        \usepackage[margins=raggedright]{floatrow}
+        ```
+    - |
+        ```{=latex}
+        % https://github.com/jgm/pandoc/wiki/Pandoc-Tricks#definition-list-terms-on-their-own-line-in-latex
+        % "Clone" the original \item command
+        \let\originalitem\item
+
+        % Redefine the \item command using the "clone"
+        \makeatletter
+        \renewcommand{\item}[1][\@nil]{%
+            \def\tmp{#1}%
+            \ifx\tmp\@nnil\originalitem\else\originalitem[#1]\hfill\par\fi}
+        \makeatother
+        ```
+    - |
+        ```{=latex}
+        % The are at least two ways to configure how LaTeX floats figures.
+        %
+        % 1. One approach is described in section 17.2 of
+        %    http://tug.ctan.org/tex-archive/info/epslatex/english/epslatex.pdf
+        %    However, the approach described there requires to teach people
+        %    how to write LaTeX cross-references in markdown.
+        %
+        % 2. Force figures, listings, etc., to float "[H]ere".
+        %    This is a LaTeX anti-pattern because it causes large gaps of whitespace on some pages.
+        %    This approach avoids having to teach people to create LaTeX cross-references.
+        %    https://tex.stackexchange.com/a/101726
+        %
+        % Use option 2.
+        \usepackage{float}
+        \floatplacement{figure}{H}
+        ```
 ---
 
-# <%= @system.config['name'] %>
+# Introduction
 
-## Overview
+## About this document
 
-<%= @system.config['overview'] %>
+A System Security Plan (SSP) is a document to describe security controls in use
+on an information system and their implementation. An SSP provides:
+
+- Narrative of security control implementation
+- Description of components and services
+- System data flows and authorization boundaries
+
 
 ## Standards
 
-This System Security Plan (SSP) addresses these standards:
+This SSP draws from these standards:
 
 <% @system.standards.each do |s| -%>
 - <%= s['name'] %>
 <% end %>
 
 The full copy of each standard is included in the appendix.
+
+
+## Certifications
+
+A certification is a logical grouping of controls that are of interest to
+a given subject. A particular certification does not necessarily target all
+controls from a standard, nor does a particular certification need to draw
+from a single standard.
+
+This SSP addresses these certifications:
+
+<% @system.certifications.each do |c| -%>
+- <%=c['name']%>
+
+<% c['requires'].each do |r| -%>
+    - <%=r['standard_key']-%> control <%=r['control_key']%>
+<% end -%>
+
+<% end %>
+
+
+# <%= @system.config['name'] %>
+
+## Overview
+
+<%= @system.config['overview'] %>
 
 
 ## Components
@@ -84,18 +154,24 @@ _The organization has not yet documented attestations for this component_.
 The organization offers the following attestations for this component.
 <% end %>
 
-<% c['attestations'].each do |a| %>
+<% c['attestations'].compact.each do |a| %>
 ####  <%= a['summary'] %>
 
-Status: <%= a['status'] %>
-
-Date verified: <%= a['date_verified'] if a['date_verified'] %>
-
-Satisfies:
-
-<% a['satisfies'].each do |cid| -%>
-- <%= cid['standard_key'] %> control <%= cid['control_key'] %>
-<% end -%>
++----------+---------------+--------------------------------------------------------------+
+| Status   | Date verified | Satisfies                                                    |
++==========+===============+==============================================================+
+<%
+s = a['satisfies'][0]
+verbiage = sprintf('%-58s', [s['standard_key'], 'control', s['control_key']].join(' '))
+-%>
+| <%=sprintf('%-8s', a['status'])-%> | <%=sprintf('%-13s', a['date_verified'])-%> | - <%=verbiage-%> |
+<%
+a['satisfies'][1..].each do |s|
+    verbiage = sprintf('%-58s', [s['standard_key'], 'control', s['control_key']].join(' '))
+-%>
+|          |               | - <%=verbiage-%> |
+<%  end -%>
++----------+---------------+--------------------------------------------------------------+
 
 <%= a['narrative'] %>
 
@@ -111,11 +187,15 @@ Satisfies:
 <% if s['families'] and !s['families'].empty? %>
 ### Families
 
-<% s['families'].each do |family| %>
-<%= family['family_key'] %>
-  ~ <%= family['name'] %>
+<%=s['name']-%> categorizes controls into logical groups called families.
 
-<% end %>
+| Family abbreviation        | Family name          |
+| -------------------------- | -------------------- |
+<% s['families'].each do |family| -%>
+| <%=family['family_key']-%> | <%=family['name']-%> |
+<% end -%>
+
+  : Control families for <%=s['name']%>
 
 <% end %>
 

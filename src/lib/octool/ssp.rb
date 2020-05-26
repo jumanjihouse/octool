@@ -53,6 +53,9 @@ module OCTool
                 toc_depth 3
                 number_sections
                 highlight_style 'pygments'
+                # https://en.wikibooks.org/wiki/LaTeX/Source_Code_Listings#Encoding_issue
+                # Uncomment the following line after the "listings" package is compatible with utf8
+                # listings
             end
             output = converter << File.read(md_path)
             File.new(out_path, 'wb').write(output)
