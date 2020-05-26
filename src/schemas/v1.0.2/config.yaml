@@ -1,0 +1,111 @@
+---
+type: map
+class: Config
+mapping:
+    schema_version:
+        desc: |
+            Must match one of the schema directories in the octool source.
+        required: true
+        type: str
+
+    logo:
+        desc: Image for title page.
+        required: false
+        type: map
+        class: Logo
+        mapping:
+            path:
+                desc: Path to image.
+                type: str
+                required: true
+            width:
+                desc: Width of image, such as "1in" or "254mm"
+                type: str
+                required: true
+
+    name:
+        desc: Human-friendly to appear in the SSP.
+        required: true
+        type: str
+
+    overview:
+        desc: Human-friendly description to appear in the SSP.
+        required: true
+        type: str
+
+    maintainers:
+        desc: Who should somebody contact for questions about this SSP?
+        required: true
+        type: seq
+        sequence:
+            - type: str
+
+    metadata:
+        desc: Optional metadata.
+        required: false
+        type: map
+        class: Metadata
+        mapping:
+            abstract:
+                desc: Abstract appears in document metadata.
+                required: false
+                type: str
+            description:
+                desc: Description appears in document metadata.
+                required: false
+                type: str
+            '=':
+                desc: Arbitrary key:value pair of strings.
+                type: str
+
+    includes:
+        desc: Additional files to include from the system repo.
+        required: true
+        type: seq
+        sequence:
+            - type: map
+              class: Include
+              mapping:
+                  type:
+                      required: true
+                      type: str
+                      enum:
+                          - certification
+                          - component
+                          - standard
+                  path:
+                      desc: Path must be relative within the repo.
+                      required: true
+                      type: str
+
+    acronyms:
+        desc: |
+            List of acronyms to be referenced in the doc.
+
+            The acronyms follow the forms and usage described by the pandoc filter
+            https://gitlab.com/mirkoboehm/pandoc-acronyms
+
+            If your config.yaml includes acronyms, the filter is automatically invoked.
+        required: false
+        type: map
+        mapping:
+            '=':
+                desc: |
+                    Acronym as used in the doc source, such as "bba".
+                    The source usually refers to the acronym with syntax "[!bba]",
+                    but other syntax forms are possible (see upstream doc).
+                type: map
+                class: Acronym
+                mapping:
+                    shortform:
+                        desc: The short form of the expanded acronym, such as "BBA".
+                        required: true
+                        type: str
+                    longform:
+                        desc: |
+                            The expanded form of the abbreviation, such as "Beer Brewing Attitude".
+                            The first instance of "[!bba]" in the doc is automatically expanded to
+                            "<longform> (<shortform>)".
+                            Example: "[!bba]" expands to "Beer Brewing Attitude (BBA)".
+                        required: true
+                        type: str

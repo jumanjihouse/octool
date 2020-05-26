@@ -22,6 +22,10 @@ module OCTool
             @data = []
         end
 
+        def acronyms
+            @acronyms ||= config['acronyms']
+        end
+
         def certifications
             @certifications ||= data.select { |e| e['type'] == 'certification' }
         end

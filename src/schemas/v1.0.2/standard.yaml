@@ -1,0 +1,50 @@
+---
+type: map
+class: Standard
+mapping:
+    name:
+        desc: Human-friendly name to appear in SSP.
+        type: str
+        required: true
+
+    standard_key:
+        desc: Unique ID to use within YAML files.
+        type: str
+        required: true
+
+    families:
+        desc: Optional list of control families.
+        type: seq
+        required: false
+        sequence:
+            - type: map
+              class: ControlFamily
+              mapping:
+                  family_key:
+                      desc: Unique ID of the family
+                      type: str
+                      unique: true
+                  name:
+                      desc: Human-friendly name of the family
+                      type: str
+    controls:
+        desc: Mandatory list of controls defined by the standard.
+        required: true
+        type: seq
+        sequence:
+            - type: map
+              class: Control
+              mapping:
+                  control_key:
+                      type: str
+                      unique: true
+                      required: true
+                  family_key:
+                      type: str
+                      required: false
+                  name:
+                      type: str
+                      required: true
+                  description:
+                      type: str
+                      required: true
