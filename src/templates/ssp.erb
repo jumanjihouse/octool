@@ -23,7 +23,6 @@ description: |
 
 fontsize: 11pt
 mainfont: NotoSans
-#monofont: NotoSansMono-ExtraCondensedLight
 monofont: NotoSansMono-ExtraCondensed
 mainfontoptions:
     - Numbers=Lowercase
@@ -54,6 +53,11 @@ geometry:
     - bottom=2cm
 
 header-includes:
+    - |
+        ```{=latex}
+        % https://ctan.org/pkg/metalogo?lang=en
+        \usepackage{metalogo}
+        ```
     - |
         ```{=latex}
         % https://github.com/jgm/pandoc/wiki/Pandoc-Tricks#left-aligning-tables-in-latex
@@ -208,3 +212,34 @@ a['satisfies'][1..].each do |s|
 
 <% end %>
 <% end %>
+
+
+# Colophon
+
+This document was typeset in NotoSans with \LuaTeX\.
+The main body font is 11-point, and
+code snippets use NotoSansMono-ExtraCondensed.
+
+The Noto family of fonts is freely available and developed by Google,
+which describes Noto as:
+
+> When text is rendered by a computer, sometimes characters are displayed as
+> "tofu". They are little boxes to indicate your device doesn't have a
+> font to display the text.
+>
+> Google has been developing a font family called Noto, which aims to support
+> all languages with a harmonious look and feel. Noto is Google's answer to
+> tofu. The name noto is to convey the idea that Google's goal is to see
+> "no more tofu". Noto has multiple styles and weights, and is freely
+> available to all.
+
+Core tools used to produce this document:
+
+- [Docker](https://www.docker.com/) provides a repeatable environment in
+  which to run the tools.
+- [OCTool](https://github.com/jumanjihouse/octool)
+  provides a schema and wrapper to express compliance data as configuration.
+- [Pandoc](https://pandoc.org/) converts extended markdown to PDF output.
+- [Python](https://www.python.org/) is a core language for automation.
+- [Ruby](https://www.ruby-lang.org/en/) is a core language for automation.
+- [TeXLive](https://www.tug.org/texlive/) provides the \TeX\ family of tools.
