@@ -6,4 +6,5 @@ module OCTool
     ERB_DIR = File.join(File.dirname(__FILE__), '..', '..', 'templates').freeze
     DEFAULT_CONFIG_FILENAME = 'config.yaml'
     DEFAULT_OUTPUT_DIR = '/data'
+    DEFAULT_SSP_VERSION = 'unset'
 end

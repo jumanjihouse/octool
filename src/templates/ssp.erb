@@ -8,10 +8,17 @@ title: |
 title: "<%= @system.config['name'] -%>"
 <% end %>
 
-subtitle: "System Security Plan"
+subtitle: |
+    System Security Plan
+
+    <%=build_date.strftime('%Y-%b-%d')%>
+
+<% unless version == OCTool::DEFAULT_SSP_VERSION -%>
+    Version <%=version%>
+<% end -%>
 
 author:
-<% @system.config['maintainers'].each do |maintainer| %>
+<% @system.config['maintainers'].each do |maintainer| -%>
     - <%= maintainer -%>
 <% end %>
 
@@ -93,6 +100,24 @@ header-includes:
         % Use option 2.
         \usepackage{float}
         \floatplacement{figure}{H}
+        ```
+    - |
+        ```{=latex}
+        % https://tex.stackexchange.com/a/32537
+        \usepackage{lastpage}
+
+        % https://ctan.org/pkg/fancyhdr?lang=en
+        \usepackage{fancyhdr}
+
+        \pagestyle{fancy}
+        <% unless version == OCTool::DEFAULT_SSP_VERSION %>
+        \fancyfoot[L]{Version: <%=version-%>}
+        <% end %>
+        \fancyfoot[C]{<%=build_date.strftime('%Y-%b-%d')-%>}
+        \fancyfoot[R]{\thepage\ of\ \pageref{LastPage}}
+        \renewcommand{\footrulewidth}{0.4pt} % thickness
+        \renewcommand{\headrulewidth}{0.4pt} % thickness
+        \fancypagestyle{plain}{\fancyhead{}\renewcommand{\headrule}{}}
         ```
 ---
 

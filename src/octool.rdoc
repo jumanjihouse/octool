@@ -48,6 +48,13 @@ where to store outputs
 [Default Value] /tmp
 Default output directory respects env vars TMPDIR, TMP, TEMP
 
+===== --version VERSION
+
+Set SSP version
+
+[Default Value] unset
+Underscores are replaced by spaces
+
 ==== Command: <tt>validate </tt>
 Check sanity of configuration
 
