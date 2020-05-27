@@ -55,7 +55,7 @@ module OCTool
             out_path = File.join(@output_dir, "ssp.#{type}")
             print "Building #{out_path} ... "
             converter = pandoc.configure do
-                from 'markdown'
+                from 'markdown+autolink_bare_uris'
                 to type
                 pdf_engine 'lualatex'
                 toc
