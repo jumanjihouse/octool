@@ -132,13 +132,15 @@ on an information system and their implementation. An SSP provides:
 - Description of components and services
 - System data flows and authorization boundaries
 
+The SSP is also a tool to guide the assessment of the effectiveness
+of controls within the system.
 
 ## Standards
 
 This SSP draws from these standards:
 
 <% @system.standards.each do |s| -%>
-- <%= s['name'] %>
+- <%=s['name']-%> (<%=s['standard_key']-%>)
 <% end %>
 
 The full copy of each standard is included in the appendix.
