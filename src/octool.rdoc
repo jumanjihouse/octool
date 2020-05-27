@@ -1,6 +1,6 @@
 == octool - Open Compliance Tool
 
-v0.0.10
+v0.0.11
 
 === Global Options
 === --help
