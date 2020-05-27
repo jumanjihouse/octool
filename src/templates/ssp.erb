@@ -119,6 +119,45 @@ header-includes:
         \renewcommand{\headrulewidth}{0.4pt} % thickness
         \fancypagestyle{plain}{\fancyhead{}\renewcommand{\headrule}{}}
         ```
+    - |
+        ```{=latex}
+        % Which bullet glyphs are avaiable?
+        % http://texdoc.net/texmf-dist/doc/latex/comprehensive/symbols-a4.pdf TABLE 50
+        %
+        % https://learnbyexample.github.io/tutorial/ebook-generation/customizing-pandoc/
+        % https://tex.stackexchange.com/questions/174244/change-the-shape-of-the-bullet-list
+        % https://texblog.org/2008/10/16/lists-enumerate-itemize-description-and-how-to-change-them/
+        % https://tex.stackexchange.com/a/64899
+        % https://ctan.org/pkg/enumitem?lang=en
+        % https://www.latex4technics.com/?note=2vy0
+        %
+        %\usepackage{amsfonts}
+        %
+        % Make bullets small
+        %\renewcommand{\labelitemi}{\tiny $\textbullet$}
+        %\renewcommand{\labelitemii}{\tiny $\textopenbullet$}
+        %\renewcommand{\labelitemiii}{\tiny $\triangleright$}
+        %
+        % Align bullets to left margin and make small
+        % https://tex.stackexchange.com/a/86408
+        %\usepackage{enumitem}
+        %\usepackage{graphicx}
+        %\setlist[itemize,1]{leftmargin=*,label=\scalebox{.8}{$\textbullet$}}
+        %\setlist[itemize,2]{leftmargin=*,label=\scalebox{.8}{$\textopenbullet$}}
+        %\setlist[itemize,3]{leftmargin=*,label=\scalebox{.8}{\triangleright}}
+        %
+        % Align bullets to left margin and use normal font
+        \usepackage{enumitem}
+        \setlist[itemize,1]{leftmargin=*,label=$\textbullet$}
+        \setlist[itemize,2]{leftmargin=*,label=$\textopenbullet$}
+        \setlist[itemize,3]{leftmargin=*,label=\triangleright}
+        %
+        % Align bullets to left margin and use slightly smaller font
+        %\usepackage{MnSymbol}
+        %\setlist[itemize,1]{leftmargin=*,label=$\bullet$}
+        %\setlist[itemize,2]{leftmargin=*,label=$\circ$}
+        %\setlist[itemize,3]{leftmargin=*,label=\blacktriangleright}
+        ```
 ---
 
 # Introduction
