@@ -10,3 +10,7 @@ fi
 
 VERSION="$(ruby -e 'load "src/lib/octool/version.rb"; print OCTool::VERSION')"
 echo "VERSION is ${VERSION}"
+
+VCS_REF="$(git describe --dirty --tags --always --abbrev=7)"
+export VCS_REF
+echo "VCS_REF is ${VCS_REF}"

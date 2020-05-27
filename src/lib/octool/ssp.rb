@@ -1,13 +1,24 @@
 # frozen_string_literal: true
 
+require 'date'
 require 'erb'
 
 module OCTool
     # Build DB, CSV, and markdown.
     class SSP
+        attr_reader :build_date
+        attr_reader :version
+
         def initialize(system, output_dir)
             @system = system
             @output_dir = output_dir
+            @version = OCTool::DEFAULT_SSP_VERSION
+            @build_date = DateTime.now
+        end
+
+        def version=(version)
+            # LaTeX fancyheader aborts on underscore in footer.
+            @version = version.to_s.gsub(/_+/, ' ')
         end
 
         def pandoc
@@ -22,7 +33,8 @@ module OCTool
             exit(1)
         end
 
-        def generate
+        def generate(version = nil)
+            self.version = version if version
             unless File.writable?(@output_dir)
                 warn "[FAIL] #{@output_dir} is not writable"
                 exit(1)

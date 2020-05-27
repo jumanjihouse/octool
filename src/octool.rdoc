@@ -1,6 +1,6 @@
 == octool - Open Compliance Tool
 
-v0.0.10
+v0.0.11
 
 === Global Options
 === --help
@@ -47,6 +47,13 @@ where to store outputs
 
 [Default Value] /tmp
 Default output directory respects env vars TMPDIR, TMP, TEMP
+
+===== --version VERSION
+
+Set SSP version
+
+[Default Value] unset
+Underscores are replaced by spaces
 
 ==== Command: <tt>validate </tt>
 Check sanity of configuration

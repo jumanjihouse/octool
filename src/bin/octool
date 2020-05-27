@@ -77,12 +77,18 @@ class App
         s.arg_name 'path/to/output/dir'
         s.flag [:d, :dir]
 
+        s.desc 'Set SSP version'
+        s.default_value OCTool::DEFAULT_SSP_VERSION
+        s.long_desc 'Underscores are replaced by spaces'
+        s.arg_name 'VERSION'
+        s.flag :version
+
         s.action do |global_options, options, args|
             export_dir = options[:dir]
             config_file = find_config(args)
             system = OCTool::Parser.new(config_file).load_system
             Dir.chdir File.dirname(config_file) do
-                OCTool::SSP.new(system, export_dir).generate
+                OCTool::SSP.new(system, export_dir).generate(options[:version])
             end
         end
     end

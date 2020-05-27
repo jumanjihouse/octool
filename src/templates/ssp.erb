@@ -8,10 +8,17 @@ title: |
 title: "<%= @system.config['name'] -%>"
 <% end %>
 
-subtitle: "System Security Plan"
+subtitle: |
+    System Security Plan
+
+    <%=build_date.strftime('%Y-%b-%d')%>
+
+<% unless version == OCTool::DEFAULT_SSP_VERSION -%>
+    Version <%=version%>
+<% end -%>
 
 author:
-<% @system.config['maintainers'].each do |maintainer| %>
+<% @system.config['maintainers'].each do |maintainer| -%>
     - <%= maintainer -%>
 <% end %>
 
@@ -48,7 +55,7 @@ pagestyle: headings
 papersize: letter
 geometry:
     - top=2cm
-    - left=2cm
+    - left=3cm
     - right=2cm
     - bottom=2cm
 
@@ -94,6 +101,63 @@ header-includes:
         \usepackage{float}
         \floatplacement{figure}{H}
         ```
+    - |
+        ```{=latex}
+        % https://tex.stackexchange.com/a/32537
+        \usepackage{lastpage}
+
+        % https://ctan.org/pkg/fancyhdr?lang=en
+        \usepackage{fancyhdr}
+
+        \pagestyle{fancy}
+        <% unless version == OCTool::DEFAULT_SSP_VERSION %>
+        \fancyfoot[L]{Version: <%=version-%>}
+        <% end %>
+        \fancyfoot[C]{<%=build_date.strftime('%Y-%b-%d')-%>}
+        \fancyfoot[R]{\thepage\ of\ \pageref{LastPage}}
+        \renewcommand{\footrulewidth}{0.4pt} % thickness
+        \renewcommand{\headrulewidth}{0.4pt} % thickness
+        \fancypagestyle{plain}{\fancyhead{}\renewcommand{\headrule}{}}
+        ```
+    - |
+        ```{=latex}
+        % Which bullet glyphs are avaiable?
+        % http://texdoc.net/texmf-dist/doc/latex/comprehensive/symbols-a4.pdf TABLE 50
+        %
+        % https://learnbyexample.github.io/tutorial/ebook-generation/customizing-pandoc/
+        % https://tex.stackexchange.com/questions/174244/change-the-shape-of-the-bullet-list
+        % https://texblog.org/2008/10/16/lists-enumerate-itemize-description-and-how-to-change-them/
+        % https://tex.stackexchange.com/a/64899
+        % https://ctan.org/pkg/enumitem?lang=en
+        % https://www.latex4technics.com/?note=2vy0
+        %
+        %\usepackage{amsfonts}
+        %
+        % Make bullets small
+        %\renewcommand{\labelitemi}{\tiny $\textbullet$}
+        %\renewcommand{\labelitemii}{\tiny $\textopenbullet$}
+        %\renewcommand{\labelitemiii}{\tiny $\triangleright$}
+        %
+        % Align bullets to left margin and make small
+        % https://tex.stackexchange.com/a/86408
+        %\usepackage{enumitem}
+        %\usepackage{graphicx}
+        %\setlist[itemize,1]{leftmargin=*,label=\scalebox{.8}{$\textbullet$}}
+        %\setlist[itemize,2]{leftmargin=*,label=\scalebox{.8}{$\textopenbullet$}}
+        %\setlist[itemize,3]{leftmargin=*,label=\scalebox{.8}{\triangleright}}
+        %
+        % Align bullets to left margin and use normal font
+        \usepackage{enumitem}
+        \setlist[itemize,1]{leftmargin=*,label=$\textbullet$}
+        \setlist[itemize,2]{leftmargin=*,label=$\textopenbullet$}
+        \setlist[itemize,3]{leftmargin=*,label=\triangleright}
+        %
+        % Align bullets to left margin and use slightly smaller font
+        %\usepackage{MnSymbol}
+        %\setlist[itemize,1]{leftmargin=*,label=$\bullet$}
+        %\setlist[itemize,2]{leftmargin=*,label=$\circ$}
+        %\setlist[itemize,3]{leftmargin=*,label=\blacktriangleright}
+        ```
 ---
 
 # Introduction
@@ -107,13 +171,15 @@ on an information system and their implementation. An SSP provides:
 - Description of components and services
 - System data flows and authorization boundaries
 
+The SSP is also a tool to guide the assessment of the effectiveness
+of controls within the system.
 
 ## Standards
 
 This SSP draws from these standards:
 
 <% @system.standards.each do |s| -%>
-- <%= s['name'] %>
+- <%=s['name']-%> (<%=s['standard_key']-%>)
 <% end %>
 
 The full copy of each standard is included in the appendix.
