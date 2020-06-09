@@ -76,11 +76,25 @@ header-includes:
         % "Clone" the original \item command
         \let\originalitem\item
 
+        % Create variable with default value false to use later
+        % http://handyfloss.net/2007.08/latex-programming-how-to-implement-conditionals/
+        \newif \ifonelinedef
+        \onelinedeffalse
+
         % Redefine the \item command using the "clone"
         \makeatletter
-        \renewcommand{\item}[1][\@nil]{%
-            \def\tmp{#1}%
-            \ifx\tmp\@nnil\originalitem\else\originalitem[#1]\hfill\par\fi}
+        \renewcommand{\item}[1][\@nil] {%
+            \def \tmp {#1}%
+            \ifx \tmp \@nnil
+                \originalitem
+            \else
+                \ifonelinedef
+                    \originalitem[#1]\vspace{4mm}\par
+                \else
+                    \originalitem[#1]\hfill\par
+                \fi
+            \fi
+        }
         \makeatother
         ```
     - |
@@ -277,6 +291,21 @@ a['satisfies'][1..].each do |s|
 <%= c['description'] %>
 
 <% end %>
+<% end %>
+
+
+<% if @system.config['acronyms'] %>
+# Glossary
+
+<!-- Force glossary to be typeset as oneline definitions. -->
+\onelinedeftrue
+
+<% @system.config['acronyms'].values.sort_by { |a| a['shortform'] }. each do |a| %>
+<%=a['shortform']%>
+  ~ <%=a['longform']%>
+
+<% end %>
+\onelinedeffalse
 <% end %>
 
 
