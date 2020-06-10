@@ -89,6 +89,7 @@ class App
             system = OCTool::Parser.new(config_file).load_system
             Dir.chdir File.dirname(config_file) do
                 OCTool::SSP.new(system, export_dir).generate(options[:version])
+                OCTool::SSP.new(system, export_dir).generate(options[:version], 'glossary')
             end
         end
     end

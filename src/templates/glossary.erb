@@ -1,0 +1,173 @@
+---
+<% if @system.config['logo'] -%>
+title: |
+    ![](<%= @system.config['logo']['path'] -%>){width=<%= @system.config['logo']['width'] %>}
+
+    Glossary
+<% else %>
+title: "Glossary"
+<% end %>
+
+subtitle: |
+    <%=build_date.strftime('%Y-%b-%d')%>
+
+<% unless version == OCTool::DEFAULT_SSP_VERSION -%>
+    Version <%=version%>
+<% end -%>
+
+fontsize: 11pt
+mainfont: NotoSans
+monofont: NotoSansMono-ExtraCondensed
+mainfontoptions:
+    - Numbers=Lowercase
+    - Numbers=Proportional
+    - UprightFont=*
+    - ItalicFont=*-Italic
+    - BoldFont=*-Bold
+    - BoldItalicFont=*-BoldItalic
+
+colorlinks: true
+linkcolor: black  # internal links (e.g., lof and lot)
+urlcolor: blue
+
+documentclass: article
+classoption:
+    - onecolumn
+    - oneside
+    - portrait
+
+pagestyle: headings
+papersize: letter
+geometry:
+    - top=2cm
+    - left=3cm
+    - right=2cm
+    - bottom=2cm
+
+header-includes:
+    - |
+        ```{=latex}
+        % https://ctan.org/pkg/metalogo?lang=en
+        \usepackage{metalogo}
+        ```
+    - |
+        ```{=latex}
+        % https://github.com/jgm/pandoc/wiki/Pandoc-Tricks#left-aligning-tables-in-latex
+        \usepackage[margins=raggedright]{floatrow}
+        ```
+    - |
+        ```{=latex}
+        % https://github.com/jgm/pandoc/wiki/Pandoc-Tricks#definition-list-terms-on-their-own-line-in-latex
+        % "Clone" the original \item command
+        \let\originalitem\item
+
+        % Create variable with default value false to use later
+        % http://handyfloss.net/2007.08/latex-programming-how-to-implement-conditionals/
+        \newif \ifonelinedef
+        \onelinedeffalse
+
+        % Redefine the \item command using the "clone"
+        \makeatletter
+        \renewcommand{\item}[1][\@nil] {%
+            \def \tmp {#1}%
+            \ifx \tmp \@nnil
+                \originalitem
+            \else
+                \ifonelinedef
+                    \originalitem[#1]\vspace{4mm}\par
+                \else
+                    \originalitem[#1]\hfill\par
+                \fi
+            \fi
+        }
+        \makeatother
+        ```
+    - |
+        ```{=latex}
+        % The are at least two ways to configure how LaTeX floats figures.
+        %
+        % 1. One approach is described in section 17.2 of
+        %    http://tug.ctan.org/tex-archive/info/epslatex/english/epslatex.pdf
+        %    However, the approach described there requires to teach people
+        %    how to write LaTeX cross-references in markdown.
+        %
+        % 2. Force figures, listings, etc., to float "[H]ere".
+        %    This is a LaTeX anti-pattern because it causes large gaps of whitespace on some pages.
+        %    This approach avoids having to teach people to create LaTeX cross-references.
+        %    https://tex.stackexchange.com/a/101726
+        %
+        % Use option 2.
+        \usepackage{float}
+        \floatplacement{figure}{H}
+        ```
+    - |
+        ```{=latex}
+        % https://tex.stackexchange.com/a/32537
+        \usepackage{lastpage}
+
+        % https://ctan.org/pkg/fancyhdr?lang=en
+        \usepackage{fancyhdr}
+
+        \pagestyle{fancy}
+        <% unless version == OCTool::DEFAULT_SSP_VERSION %>
+        \fancyfoot[L]{Version: <%=version-%>}
+        <% end %>
+        \fancyfoot[C]{<%=build_date.strftime('%Y-%b-%d')-%>}
+        \fancyfoot[R]{\thepage\ of\ \pageref{LastPage}}
+        \renewcommand{\footrulewidth}{0.4pt} % thickness
+        \renewcommand{\headrulewidth}{0.4pt} % thickness
+        \fancypagestyle{plain}{\fancyhead{}\renewcommand{\headrule}{}}
+        ```
+    - |
+        ```{=latex}
+        % Which bullet glyphs are avaiable?
+        % http://texdoc.net/texmf-dist/doc/latex/comprehensive/symbols-a4.pdf TABLE 50
+        %
+        % https://learnbyexample.github.io/tutorial/ebook-generation/customizing-pandoc/
+        % https://tex.stackexchange.com/questions/174244/change-the-shape-of-the-bullet-list
+        % https://texblog.org/2008/10/16/lists-enumerate-itemize-description-and-how-to-change-them/
+        % https://tex.stackexchange.com/a/64899
+        % https://ctan.org/pkg/enumitem?lang=en
+        % https://www.latex4technics.com/?note=2vy0
+        %
+        %\usepackage{amsfonts}
+        %
+        % Make bullets small
+        %\renewcommand{\labelitemi}{\tiny $\textbullet$}
+        %\renewcommand{\labelitemii}{\tiny $\textopenbullet$}
+        %\renewcommand{\labelitemiii}{\tiny $\triangleright$}
+        %
+        % Align bullets to left margin and make small
+        % https://tex.stackexchange.com/a/86408
+        %\usepackage{enumitem}
+        %\usepackage{graphicx}
+        %\setlist[itemize,1]{leftmargin=*,label=\scalebox{.8}{$\textbullet$}}
+        %\setlist[itemize,2]{leftmargin=*,label=\scalebox{.8}{$\textopenbullet$}}
+        %\setlist[itemize,3]{leftmargin=*,label=\scalebox{.8}{\triangleright}}
+        %
+        % Align bullets to left margin and use normal font
+        \usepackage{enumitem}
+        \setlist[itemize,1]{leftmargin=*,label=$\textbullet$}
+        \setlist[itemize,2]{leftmargin=*,label=$\textopenbullet$}
+        \setlist[itemize,3]{leftmargin=*,label=\triangleright}
+        %
+        % Align bullets to left margin and use slightly smaller font
+        %\usepackage{MnSymbol}
+        %\setlist[itemize,1]{leftmargin=*,label=$\bullet$}
+        %\setlist[itemize,2]{leftmargin=*,label=$\circ$}
+        %\setlist[itemize,3]{leftmargin=*,label=\blacktriangleright}
+        ```
+---
+
+<% if @system.config['acronyms'] %>
+
+<!-- Force glossary to be typeset as oneline definitions. -->
+\onelinedeftrue
+
+<% @system.config['acronyms'].values.sort_by { |a| a['shortform'] }. each do |a| %>
+<%=a['shortform']%>
+  ~ <%=a['longform']%>
+
+<% end %>
+\onelinedeffalse
+<% end %>
