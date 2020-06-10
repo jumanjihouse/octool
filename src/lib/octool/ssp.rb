@@ -70,9 +70,6 @@ module OCTool
                 from 'markdown+autolink_bare_uris'
                 to type
                 pdf_engine 'lualatex'
-                toc
-                toc_depth 3
-                number_sections
                 highlight_style 'pygments'
                 filter 'pandoc-acronyms' if ENV['PANDOC_ACRONYMS_ACRONYMS']
                 # https://en.wikibooks.org/wiki/LaTeX/Source_Code_Listings#Encoding_issue
