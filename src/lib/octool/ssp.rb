@@ -12,6 +12,7 @@ module OCTool
         def initialize(system, output_dir)
             @system = system
             @output_dir = output_dir
+            @template_name = 'ssp'
             @version = OCTool::DEFAULT_SSP_VERSION
             @build_date = DateTime.now
         end
@@ -33,8 +34,9 @@ module OCTool
             exit(1)
         end
 
-        def generate(version = nil)
+        def generate(version = nil, template_name = 'ssp')
             self.version = version if version
+            @template_name = template_name if template_name
             unless File.writable?(@output_dir)
                 warn "[FAIL] #{@output_dir} is not writable"
                 exit(1)
@@ -47,7 +49,6 @@ module OCTool
 
         def render_template
             print "Building markdown #{md_path} ... "
-            template_path = File.join(ERB_DIR, 'ssp.erb')
             template = File.read(template_path)
             output = ERB.new(template, nil, '-').result(binding)
             File.open(md_path, 'w') { |f| f.puts output }
@@ -64,15 +65,12 @@ module OCTool
 
         # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
         def write(type = 'pdf')
-            out_path = File.join(@output_dir, "ssp.#{type}")
+            out_path = File.join(@output_dir, "#{@template_name}.#{type}")
             print "Building #{out_path} ... "
             converter = pandoc.configure do
                 from 'markdown+autolink_bare_uris'
                 to type
                 pdf_engine 'lualatex'
-                toc
-                toc_depth 3
-                number_sections
                 highlight_style 'pygments'
                 filter 'pandoc-acronyms' if ENV['PANDOC_ACRONYMS_ACRONYMS']
                 # https://en.wikibooks.org/wiki/LaTeX/Source_Code_Listings#Encoding_issue
@@ -86,7 +84,11 @@ module OCTool
         # rubocop:enable Metrics/AbcSize,Metrics/MethodLength
 
         def md_path
-            @md_path ||= File.join(@output_dir, 'ssp.md')
+            File.join(@output_dir, "#{@template_name}.md")
+        end
+
+        def template_path
+            File.join(ERB_DIR, "#{@template_name}.erb")
         end
     end
 end

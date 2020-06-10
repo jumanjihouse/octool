@@ -10,6 +10,12 @@ acronyms:
     org:
         shortform: MyEO
         longform: My Example Organization, Inc.
+    cpu:
+        shortform: CPU
+        longform: central processing unit
+    vcs:
+        shortform: VCS
+        longform: version control system
 
 overview: |
     [!org] classifies remote access servers as

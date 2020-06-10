@@ -3,30 +3,17 @@
 title: |
     ![](<%= @system.config['logo']['path'] -%>){width=<%= @system.config['logo']['width'] %>}
 
-    <%= @system.config['name'] %>
+    Glossary
 <% else %>
-title: "<%= @system.config['name'] -%>"
+title: "Glossary"
 <% end %>
 
 subtitle: |
-    System Security Plan
-
     <%=build_date.strftime('%Y-%b-%d')%>
 
 <% unless version == OCTool::DEFAULT_SSP_VERSION -%>
     Version <%=version%>
 <% end -%>
-
-author:
-<% @system.config['maintainers'].each do |maintainer| -%>
-    - <%= maintainer -%>
-<% end %>
-
-absract: |
-    <%= @system.config['metadata']['abstract'] rescue 'None' %>
-
-description: |
-    <%= @system.config['metadata']['description'] rescue 'None' %>
 
 fontsize: 11pt
 mainfont: NotoSans
@@ -39,17 +26,11 @@ mainfontoptions:
     - BoldFont=*-Bold
     - BoldItalicFont=*-BoldItalic
 
-lof: true
-lot: true
 colorlinks: true
 linkcolor: black  # internal links (e.g., lof and lot)
 urlcolor: blue
 
-toc: true
-toc_depth: 3
-numbersections: true
-
-documentclass: report
+documentclass: article
 classoption:
     - onecolumn
     - oneside
@@ -178,128 +159,7 @@ header-includes:
         ```
 ---
 
-# Introduction
-
-## About this document
-
-A System Security Plan (SSP) is a document to describe security controls in use
-on an information system and their implementation. An SSP provides:
-
-- Narrative of security control implementation
-- Description of components and services
-- System data flows and authorization boundaries
-
-The SSP is also a tool to guide the assessment of the effectiveness
-of controls within the system.
-
-## Standards
-
-This SSP draws from these standards:
-
-<% @system.standards.each do |s| -%>
-- <%=s['name']-%> (<%=s['standard_key']-%>)
-<% end %>
-
-The full copy of each standard is included in the appendix.
-
-
-## Certifications
-
-A certification is a logical grouping of controls that are of interest to
-a given subject. A particular certification does not necessarily target all
-controls from a standard, nor does a particular certification need to draw
-from a single standard.
-
-This SSP addresses these certifications:
-
-<% @system.certifications.each do |c| -%>
-- <%=c['name']%>
-
-<% c['requires'].each do |r| -%>
-    - <%=r['standard_key']-%> control <%=r['control_key']%>
-<% end -%>
-
-<% end %>
-
-
-# <%= @system.config['name'] %>
-
-## Overview
-
-<%= @system.config['overview'] %>
-
-
-## Components
-
-<% @system.components.each do |c| %>
-### <%= c['name'] %>
-
-<%= c['description'] %>
-
-<% if c['attestations'].empty? %>
-_The organization has not yet documented attestations for this component_.
-<% else %>
-The organization offers the following attestations for this component.
-<% end %>
-
-<% c['attestations'].compact.each do |a| %>
-####  <%= a['summary'] %>
-
-+----------+---------------+--------------------------------------------------------------+
-| Status   | Date verified | Satisfies                                                    |
-+==========+===============+==============================================================+
-<%
-s = a['satisfies'][0]
-verbiage = sprintf('%-58s', [s['standard_key'], 'control', s['control_key']].join(' '))
--%>
-| <%=sprintf('%-8s', a['status'])-%> | <%=sprintf('%-13s', a['date_verified'])-%> | - <%=verbiage-%> |
-<%
-a['satisfies'][1..].each do |s|
-    verbiage = sprintf('%-58s', [s['standard_key'], 'control', s['control_key']].join(' '))
--%>
-|          |               | - <%=verbiage-%> |
-<%  end -%>
-+----------+---------------+--------------------------------------------------------------+
-
-<%= a['narrative'] %>
-
-<% end %>
-<% end %>
-
-
-# Appendix: Standards
-
-<% @system.standards.each do |s| %>
-## <%=s['name'] %>
-
-<% if s['families'] and !s['families'].empty? %>
-### Families
-
-<%=s['name']-%> categorizes controls into logical groups called families.
-
-| Family abbreviation        | Family name          |
-| -------------------------- | -------------------- |
-<% s['families'].each do |family| -%>
-| <%=family['family_key']-%> | <%=family['name']-%> |
-<% end -%>
-
-  : Control families for <%=s['name']%>
-
-<% end %>
-
-### Controls
-
-<% s['controls'].each do |c| %>
-#### Control <%= c['control_key'] -%>: <%= c['name'] %>
-
-<%= c['description'] %>
-
-<% end %>
-<% end %>
-
-
 <% if @system.config['acronyms'] %>
-# Glossary
 
 <!-- Force glossary to be typeset as oneline definitions. -->
 \onelinedeftrue
@@ -311,34 +171,3 @@ a['satisfies'][1..].each do |s|
 <% end %>
 \onelinedeffalse
 <% end %>
-
-
-# Colophon
-
-This document was typeset in NotoSans with \LuaTeX\.
-The main body font is 11-point, and
-code snippets use NotoSansMono-ExtraCondensed.
-
-The Noto family of fonts is freely available and developed by Google,
-which describes Noto as:
-
-> When text is rendered by a computer, sometimes characters are displayed as
-> "tofu". They are little boxes to indicate your device doesn't have a
-> font to display the text.
->
-> Google has been developing a font family called Noto, which aims to support
-> all languages with a harmonious look and feel. Noto is Google's answer to
-> tofu. The name noto is to convey the idea that Google's goal is to see
-> "no more tofu". Noto has multiple styles and weights, and is freely
-> available to all.
-
-Core tools used to produce this document:
-
-- [Docker](https://www.docker.com/) provides a repeatable environment in
-  which to run the tools.
-- [OCTool](https://github.com/jumanjihouse/octool)
-  provides a schema and wrapper to express compliance data as configuration.
-- [Pandoc](https://pandoc.org/) converts extended markdown to PDF output.
-- [Python](https://www.python.org/) is a core language for automation.
-- [Ruby](https://www.ruby-lang.org/en/) is a core language for automation.
-- [TeXLive](https://www.tug.org/texlive/) provides the \TeX\ family of tools.
