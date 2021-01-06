@@ -44,7 +44,7 @@ repos:
             args: [--format, parsable, --strict]
 
     - repo: https://github.com/jumanjihouse/pre-commit-hook-yamlfmt
-      rev: 0.0.10
+      rev: 0.1.0
       hooks:
           - id: yamlfmt
 
