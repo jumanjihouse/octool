@@ -19,7 +19,7 @@ repos:
           - id: trailing-whitespace
 
     - repo: https://github.com/jumanjihouse/pre-commit-hooks
-      rev: 2.1.0
+      rev: 2.1.5
       hooks:
           - id: check-mailmap
           - id: fasterer
